@@ -1,0 +1,6 @@
+1.编写带有native方法的java文件
+2.javac编译生成.class文件
+3.javah -jni生成.h文件
+4.编写.c文件实现本地方法
+5.生成动态链接库
+	cl -I%java_home%\include -I%java_home%\include\win32 -LD HelloWorldImp.c -Fehello.dll
