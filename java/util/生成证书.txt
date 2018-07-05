@@ -1,0 +1,2 @@
+1、生成.keystore文件
+	keytool -genkey -alias tomcat

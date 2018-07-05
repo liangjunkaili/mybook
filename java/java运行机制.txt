@@ -1,0 +1,52 @@
+Oracle Java
+1、.java文件----》java编译器-----》.class文件----》java虚拟机
+2、JDK
+第一级别：精读源码
+	java.io
+	java.lang
+		interface：
+			Appendable
+			AutoCloseable
+			CharSequence
+			Cloneable
+			Comparable
+			Iterable
+			Runnable
+		注解：
+			@Documented
+			@Retention
+			@Target
+	java.util
+第二级别：深刻理解
+	java.lang.reflect
+	java.net
+	javax.net.*
+	java.nio.*
+	java.util.concurrent.*
+第三级别：会用即可
+	java.lang.annotation
+	javax.annotation.*
+	java.lang.ref
+	java.math
+	java.rmi.*
+	javax.rmi.*
+	java.security.*
+	javax.security.*
+	java.sql
+	javax.sql.*
+	javax.transaction.*
+	java.text
+	javax.xml.*
+	org.w3c.dom.*
+	org.xml.sax.*
+	javax.crypto.*
+	javax.imageio.*
+	javax.jws.*
+	java.util.jar
+	java.util.logging
+	java.util.prefs
+	java.util.regex
+	java.util.zip
+第四级别：请无视它
+3、jre
+4、jvm

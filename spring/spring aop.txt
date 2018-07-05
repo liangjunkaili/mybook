@@ -1,0 +1,13 @@
+面向切面编程：主要解决日志、事务、权限等
+aop代理有JDK动态代理（基于接口）、CGLIB代理（基于子类）
+
+基于注解的AOP配置方式
+1.启用@AsjectJ支持
+在applicationContext.xml中配置下面一句:
+<aop:aspectj-autoproxy />
+2.通知类型介绍
+(1)Before:在目标方法被调用之前做增强处理,@Before只需要指定切入点表达式即可
+(2)AfterReturning:在目标方法正常完成后做增强,@AfterReturning除了指定切入点表达式后，还可以指定一个返回值形参名returning,代表目标方法的返回值
+(3)AfterThrowing:主要用来处理程序中未处理的异常,@AfterThrowing除了指定切入点表达式后，还可以指定一个throwing的返回值形参名,可以通过该形参名
+来访问目标方法中所抛出的异常对象
+(4)After:在目标方法完成之后做增强，无论目标方法时候成功完成。@After可以指定一个切入点表达式
