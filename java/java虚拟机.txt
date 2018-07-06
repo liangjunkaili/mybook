@@ -45,13 +45,46 @@
 	跟踪垃圾回收：
 		-XX:+PrintGC（简单信息）
 		-XX:+PrintGCDetails（详细信息）
-		-XX:+PrintHeapGC（全面的堆信息）
+		-XX:+PrintHeapAtGC（全面的堆信息）
 		-XX:+PrintGCTimeStamps(GC发生的时间)
 		-XX:+PrintGCApplicationConcurrentTime（打印应用程序的执行时间）
 		-XX:+PrintGCApplicationStoppedTime(打印应用程序由于GC产生的停顿时间)
 		-XX:+PrintReferenceGC(软引用、弱引用、虚引用、Finallize队列)
 		-Xloggc:log/gc.log（虚拟机允许将GC日志以文件的形式输出）
-		-XX:+UseSerialGC（使用串行垃圾回收器）
+		-XX:+UseSerialGC（新生代、老年代都使用串行垃圾回收器）
+		-XX:+UseParNewGC（新生代使用ParNew回收器，老年代使用串行回收器）
+		-XX:+UseParallelGC（新生代使用ParallelGC回收器，老年代使用串行回收器）
+		-XX:+UseConcMarkSweepGC（新生代使用ParNew回收器，老年代使用CMS）
+		-XX:ParallelGCThreads（垃圾回收时的线程数，CPU数或者3+（（5*CPU_Count）/8）
+		-XX:+UseParallelOldGC（新生代使用ParallelGC回收器，老年代使用ParallelOldGC回收器）
+		-XX:MaxGCPauseMillis（设置最大垃圾收集停顿时间）
+		-XX:GCTimeRatio（设置吞吐量大小n）,系统用于垃圾收集的时间不超过1/(1+n)%
+		-XX:+UseAdaptiveSizePolicy（打开自适应GC策略）
+		-XX:-CMSPrecleaningEnabled（不进行预清理）
+		-XX:ConcGCThreads/-XX:ParallelCMSThreads（设置并发线程数）
+		-XX:CMSInitiatingOccupancyFraction（指定CMS回收器的回收阈值）
+		-XX:+UseCMSCompactAtFullCollection（CMS在垃圾收集完后，进行一次内存碎片整理）
+		-XX:CMSFullGCsBeforeCompaction（设定进行多少次CMS回收后，进行一次内存压缩）
+		-XX:+CMSClassUnloadingEnabled（使用CMS回收Perm区）
+		-XX:CMSInitiatingPermOccupancyFraction(当永久区占用率达到这个百分比时，启动CMS回收，前提上一个参数已经激活)
+		-XX:UseCMSInitiatingOccupancyOnly（只在达到阈值时才进行CMS回收）
+		-XX:+UseG1GC（打开G1收集器）
+		-XX:GCPauseIntervalMillis（设置停顿间隔时间）
+		-XX:InitiatingHeapOccupancyPercent（当整个堆使用率达到多少时，触发并发标记周期的执行）
+		-XX:+DisableExplicitGC（禁用显示GC）
+		-XX:+ExplicitGCInvokesConcurrent（使显示GC使用并发的方式进行回收）
+		-XX:-ScavengeBeforeFullGC（去除发送在FullGC之前的那次新生代GC）
+		-XX:MaxTenuringThreshold（新生代对象的最大年龄）
+		-XX:TargetSurvivorRatio（设置survivor区的目标使用率）
+		-XX:PretenureSizeThreshold（设置对象直接晋升老年代的阈值，单位是字节，只对串行回收器和ParNew有效）
+		-XX:-UseTLAB（禁用TLAB）
+		-XX:-BackgroundCompolation（禁止后台编译）
+		-XX:-DoEscapeAnalysis（禁用逃逸分析）
+		-Xcomp（启用对所有函数的JIT）
+		-XX:TLABRefillWasteFraction（TLAB中允许产生这种浪费的比例）
+		-XX:-ResizeTLAB（禁用自动调整TLAB的大小）
+		-XX:TLABSize（手动指定一个TLAB的大小）
+		-XX:+PrintTLAB（观察TLAB的使用情况）
 	跟踪类加载/卸载：
 		-verbose:class（类的加载和卸载）
 		-XX:+TraceClassLoading（类的加载）
@@ -69,6 +102,7 @@
 		-XX:SurvivorRatio(设置新生代eden/from)
 		-XX:NewRatio(老年代/新生代)
 		-XX:+HeapDumpOnOutOfMemoryError(在内存溢出时导出整个堆信息)
+		-XX:+HeapDumpBeforeFullGC(在Full GC前dump)
 		-XX:HeapDumpPath(指定导出堆的存放路径)（MAT工具）
 		-XX:OnOutOfMemoryError(发送错误时执行一个脚本文件)
 	方法区配置：
@@ -104,4 +138,172 @@
 	弱引用（引用队列，构造时指定，回收时加入）：发现就会被回收
 	虚引用：必须和引用队列一起使用，跟踪垃圾回收过程
 13、垃圾回收时的停顿现象（stop the world）
-	Visual GC工具
+	VisualVM GC工具
+14、垃圾回收器（回收器标识符）
+	串行回收器：使用单线程进行垃圾回收的回收器（专注性、独占性）
+		新生代串行回收器：使用复制算法
+		老年代串行回收器：使用标记压缩算法
+	并行回收器：使用多个线程同时进行垃圾回收
+		新生代ParNew回收器：只是简单的将串行回收器多线程化
+		新生代ParallelGC回收器：使用复制算法，非常关注系统的吞吐量，支持一种自适应的GC调节策略
+		老年代ParallelOldGC回收器：使用标记压缩算法
+	CMS回收器：主要关注系统停顿时间，使用标记清除算法，多线程并行回收
+		初始标记（独占系统资源）
+		并发标记
+		预清理
+		重新标记（独占系统资源）
+		并发清理
+		并发重置
+	G1回收器：为了取代CMS回收器，并行性、并发性、分代GC、空间整理、可预见性
+		新生代GC：回收eden区和survivor区
+		并发标记周期（记忆集、回收集）
+			初始标记（STW）：产生一次新生代GC
+			根区域扫描
+			并发标记
+			重新标记（STW）（SATB(Snapshot-At-The-Beginning)算法）
+			独占清理（STW）
+			并发清理阶段
+		混合收集：完成后，触发一次新生代GC
+		如果需要，可能会进行Full GC
+15、TLAB（Thread Local Allocation Buffer）线程本地分配缓存：加速对象分配，占用eden区空间
+	每一个java线程分配一块TLAB空间
+	虚拟机内部维护一个refill_waste的值=1/TLABRefillWasteFraction
+16、对象分配流程
+	尝试栈上分配----成功----》栈上分配
+		|失败
+	尝试TLAB分配----成功----》TLAB分配
+		|失败
+	是否满足直接进入老年代的条件----满足----》老年代分配
+		|不满足
+	eden分配
+17、压测工具JMeter
+18、性能监控工具（需要实践）
+	Linux下的性能监控工具
+		top：显示系统整体资源使用情况
+		vmstat：监控内存和CPU
+		iostat：监控IO使用
+		pidstat：多功能诊断器（需要安装）
+	Windows下的性能监控工具
+		任务管理器
+		perfmon性能监控工具
+		Process Explorer进程管理工具（需要下载）
+		pslist命令（需要下载）
+	JDK性能监控工具
+		jps：查看Java进程
+		jstat：查看虚拟机运行时信息
+		jinfo：查看虚拟机参数
+		jmap：导出堆到文件
+		jhat：堆分析工具
+		jstack：查看线程堆栈
+		jstatd：远程主机信息收集
+		jcmd：多功能命令行
+		hprof：性能统计工具
+		扩展jps命令
+	图形化虚拟机监控工具JConsole
+		需要连接远程进程，在远程java应用程序启动时，添加如下参数：
+		-Djava.rmi.server.hostname=127.0.0.1
+		-Dcom.sun.management.jmxremote
+		-Dcom.sun.management.jmxremote.port=8888
+		-Dcom.sun.management.jmxremote.authenticate=false
+		-Dcom.sun.management.jmxremote.ssl=false
+	可视化性能监控工具Visual VM（需要下载）
+		安装BTrace插件（写BTrace脚本）
+	虚拟机诊断工具Mission Control
+		飞机记录器需要设置以下参数
+		-XX:+UnlockCommercialFeatures
+		-XX:+FlightRecorder
+19、分析Java堆
+	找到内存溢出的原因
+		堆溢出（对象大小之和大于-Xmx的值）
+		直接内存溢出
+		过多线程导致OOM
+		永久区溢出
+		GC效率低下引起的OOM
+	String在虚拟机中的实现
+		不变性
+		针对常量池的优化
+		类的final定义
+		内存泄漏：由于疏忽或错误造成程序未能释放已经不再使用的内存的情况
+		常量池在JDK1.6在方法区中，在JDK1.7之后在堆中
+	浅堆：一个对象所消耗的内存
+	保留集：当对象A被垃圾回收后，可以被释放的所有的对象集合（包括A）
+	深堆：对象的保留集中所有对象的浅堆大小之和。
+	支配树：基于对象间的引用图建立。
+		对象A的子树表示对象A的保留集，即深堆。
+		如果A支配B，那么A的直接支配者也支配B
+		支配树的边与对象引用图的边不直接对应
+20、MAT对OQL的支持（Object Query Language）
+	Select
+		OBJECTS：可以将返回结果集中的项以对象的形式显示
+		AS RETAINED SET：可以得到所得对象的保留集
+		DISTINCT：在结果集中去除重复对象
+		select * from java.util.Vector v
+		select OBJECTS v.elementData from java.util.Vector v
+		select AS RETAINED SET * from java.util.Vector
+	From
+		INSTANCEOF：返回指定类的所有子类实例
+		OBJECTS：返回类的信息而不是类的实例信息
+	Where
+	内置对象与方法
+21、VisualVM对OQL的支持
+	基本语法：（关键字必须小写）
+		select <JavaScript expression to select>
+		[ from [instanceof] <class name> <identifier>
+		[ where <JavaScript boolean expression to filter>]]
+	例子：
+		select s from java.lang.String s where s.value.length >=100
+		select a from int[] a where a.length >= 256
+		select {instance: s,content: s.toString()} from java.lang.String s where /^geym.*$/(s.toString())
+		select {content:file.path.toString(),instance:file} from java.io.File file
+		select cl from instanceof java.lang.ClassLoader cl(使用instance，将给定类的子类也包括道输出列表中)
+	内置heap对象
+		forEachClass():对每一个Class执行一个回调操作，heap.forEachClass(callback)，callback为JavaScript函数
+		findClass()：查找给定名称的类对象，返回类的方法和属性，heap.findClass(className)
+			name：类名称
+			superclass：父类
+			statics：类的静态变量的名称和值
+			fields：类的域信息
+			isSubclassOf()：是否是指定类的子类
+			isSuperclassOf()：是否是指定类的父类
+			subclasses()：返回所有子类
+			superclasses()：返回所有父类
+		classes()：返回堆快照中的所有的类集合，heap.classes()
+		objects()：返回堆快照中所有的对象集合，heap.objects(clazz,[includeSubtypes],[filter])
+			clazz：类名称，includeSubtypes：是否选出子类，Filter：筛选规则
+		livepaths()：返回指定对象的存活路径，heap.livepaths(obj)
+		roots()：返回这个堆的根对象，heap.roots()
+	例子：
+		select heap.findClass("java.util.Vector")
+		select heap.findClass("java.util.Vector").subclasses()
+		select filter(heap.classes(),"/java.io./(it.name)")
+		select heap.livepaths(s) from java.lang.String s where s.toString()=='56'
+		select heap.roots()
+		select heap.objects("java.io.File",true)
+		select heap.findClass("类的全路径").对象名
+	对象函数
+		classof()：返回给定java对象的类，classof(objname),返回的类对象和上面的findClass一致
+			select classof(v) from instanceof java.util.Vector v
+		objectid()：返回对象的ID
+			select objectid(v) from java.util.Vector v
+		reachables()：返回给定对象的可达对象集合
+			select {r:toHtml(reachables(s)),url:s.url.toString()} from 对象A s
+		referrers()：返回引用给定对象的对象集合，referrers(obj)
+		referees()：返回给定对象的直接引用对象集合，referees(obj)
+		sizeof()：返回指定对象的大小，即浅堆
+		rsizeof()：返回对象以及其引用对象的大小总和，即深堆
+		toHtml()：将对象转为HTML显示
+	集合/统计函数
+		contains()：判断给定集合是否包含满足给定表达式的对象，contains(set,boolexpression)
+			内置对象：it当前访问对象，index当前对象索引，array当前迭代的数组/集合
+		count()：返回指定集合内满足给定布尔表达式的对象数量
+		filter()：返回给定集合中，满足某一个布尔表达式的对象子集和
+		length()：返回给定集合的数量
+		map()：将结果集中的每一个元素按照特定的规则进行转换，以方便输出显示，map(set,transferCode)
+		max()：计算并得到给定集合的最大元素，max(set,[express])
+			参数express的内置对象：lhs用于比较的左侧元素，rhs用于比较的右侧元素
+		min()：计算并得到给定集合的最小元素
+		sort()：对指定的集合进行排序,sort(set,express)
+		top()：返回在给定集合中，按照特定顺序排序的前几个对象，top(set,express,num)
+		sum():用于计算集合的累计值
+		unique()：将除去指定集合中的重复元素，返回不包含重复元素的集合，unique(set)
+	程序化OQL分析Tomcat堆
