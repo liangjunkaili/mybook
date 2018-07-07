@@ -307,3 +307,347 @@
 		sum():用于计算集合的累计值
 		unique()：将除去指定集合中的重复元素，返回不包含重复元素的集合，unique(set)
 	程序化OQL分析Tomcat堆
+22、锁与并发
+	锁：保护临界资源不会被多个线程同时访问而受到破坏
+	临界资源
+	线程安全：在多线程环境下，无论多少个线程如何访问目标对象，目标对象的状态应该始终是保持一致的，线程的行为也总是正确的
+	关键字synchronized：保证了每次只有一个线程可以访问对象实例，确保了多线程环境中对象内部数据的一致性
+			ArrayList与Vector
+	对象头：保存对象的系统信息
+		Mark Word（32位系统为例）
+		25位表示对象的哈希值，4位表示对象的年龄，1位表示是否为偏向锁，2位表示锁的信息
+		偏向锁对象的格式：
+		[JavaThread* | epoch | age | 1 | 01]
+		前23位表示持有偏向锁的线程，后续2位表示偏向锁的时间戳，4位年龄，1表示偏向锁，最后2位表示可偏向/未锁定
+	锁在Java虚拟机中的实现和优化
+		偏向锁：如果程序没有竞争，则取消之前已经取得锁的线程同步操作
+		-XX:+UseBiasedLocking：设置启用偏向锁
+		-XX:BiasedLockingStarupDelay：表示虚拟机启动后，立即启用偏向锁
+		轻量级锁：BasicObjectLock（放置在Java栈的栈帧中）[ptr  |00] locked
+			BasicLock：内部维护着displaced_header字段，用于备份对象头部的Mark Word
+			持有该锁的Java对象指针
+		锁膨胀:[ptr     |10] monitor
+			废弃前面BasicLock备份的对象头信息
+			正式启用重量级锁（首先通过inflate()进行锁膨胀，获取对象的ObjectMonitor，然后enter()尝试进入该锁）
+		自旋锁：线程在没有取得锁时，不被挂起，而转而去执行一个空循环，在若干空循环后，线程如果可以获得锁，则继续执行，否则才会被挂起。
+		-XX:+UseSpinning：开启自旋锁
+		-XX:PreBlockSpin：设置自旋锁的等待次数
+		以上参数在1.7之后被取消
+		锁消除：在JIT编译时，通过对运行上下文的扫描，去除不可能存在共享资源竞争的锁
+		-XX:+EliminateLocks：开启锁消除
+	锁在应用层的优化思路
+		减少锁持有时间
+		减少锁粒度：ConcurrentHashMap
+		锁分离：LinkedBlockingQueue
+		锁粗化
+	无锁
+		CAS（乐观的态度）
+		原子操作：java.util.concurrent.atomic
+		LongAddr
+	理解Java内存模型
+		原子性：volatile
+		有序性：synchronized
+		可见性：volatile、synchronized
+		Happens-Before原则
+23、class文件结构（编译器版本1.8）
+	魔数：Class文件的标志，一个4个字节的无符号整数，固定为0xCAFEBABE
+	小版本号：2字节（0）
+	大版本号：2字节（52）
+	常量池的数量：2字节
+	若干常量池表项
+		类型							TAG值
+		CONSTANT_Class				7
+		CONSTANT_Methodref			10
+		CONSTANT_String				8
+		CONSTANT_Float				4
+		CONSTANT_Double				6
+		CONSTANT_Utf8				1
+		CONSTANT_MethodType			16
+		CONSTANT_Fieldref			9
+		CONSTANT_InterfaceMethodref	11
+		CONSTANT_Integer				3
+		CONSTANT_Long				5
+		CONSTANT_NameAndType		12
+		CONSTANT_MethodHandle		15
+		CONSTANT_InvokeDynamic		18
+		具体定义
+		CONSTANT_Utf8_info{
+			u1 tag;
+			u2 length;
+			u1 bytes[length];
+		}
+		CONSTANT_Class_info{
+			u1 tag;
+			u2 name_index;
+		}
+		CONSTANT_Integer_info{
+			u1 tag;
+			u4 bytes;
+		}
+		CONSTANT_Float_info{
+			u1 tag;
+			u4 bytes;
+		}
+		CONSTANT_Long_info{
+			u1 tag;
+			u4 high_bytes;
+			u4 low_bytes;
+		}
+		CONSTANT_Double_info{
+			u1 tag;
+			u4 high_bytes;
+			u4 low_bytes;
+		}
+		CONSTANT_String_info{
+			u1 tag;
+			u2 string_index;
+		}
+		CONSTANT_NameAndType_info{
+			u1 tag;
+			u2 name_index;
+			u2 descriptor_index;
+		}
+		CONSTANT_Methodref_info{
+			u1 tag;
+			u2 class_index;
+			u2 name_and_type_index;
+		}
+		CONSTANT_Fieldref_info{
+			u1 tag;
+			u2 class_index;
+			u2 name_and_type_index;
+		}
+		CONSTANT_InterfaceMethodref_info{
+			u1 tag;
+			u2 class_index;
+			u2 name_and_type_index;
+		}
+		CONSTANT_MethodType_info{
+			u1 tag;
+			u2 descriptor_index;
+		}
+		CONSTANT_MethodHandle_info{
+			u1 tag;
+			u1 reference_kind;
+			u2 reference_index;
+		}
+		reference_kind取值							
+		REF_getField(1)/REF_getStatic(2)/REF_putField(3)/REF_putStatic(4)—常量池的指向内容必须是CONSTANT_Fieldref类型
+		RE_invokeVirtual(5)/RE_invokeStatic(6)/RE_invokeSpecial(7)/RE_invokeInterface(9)——常量池指针必须是CONSTANT_Methodref类型，对于RE_invokeInterface来说为InterfaceMethodref类型，
+		且不能为<init>或者<clinit>方法（即不能为类的构造函数或者初始化方法）
+		REF_newInvokeSpecial(8)——常量池指针必须是CONSTANT_Methodref类型，且对应的方法必须为<init>
+		CONSTANT_InvokeDynamic_info{
+			u1 tag;
+			u1 bootstrap_method_attr_index;（指向引导方法表中的索引）
+			u2 name_and_type_index;
+		}
+		类型的字符串表示方法
+		字符串		类型
+		B			byte
+		D			double
+		I			int
+		S			short
+		V			void
+		[			数组
+		C			char
+		F			float
+		J			long
+		Z			boolean
+		L;			对象
+	Class的访问标记：2字节
+		标记名称					数值
+		ACC_PUBLIC				0x0001
+		ACC_PRIVATE				0x0002
+		ACC_PROTECTED			0x0004
+		ACC_STATIC				0x0008
+		ACC_FINAL				0x0010
+		ACC_VOLATILE			0x0040
+		ACC_TRANSIENT			0x0080
+		ACC_SUPER				0x0020
+		ACC_INTERFACE			0x0200
+		ACC_ABSTRACT			0x0400
+		ACC_SYNTHETIC			0x1000
+		ACC_ANNOTATION			0x2000
+		ACC_ENUM				0x4000
+	当前类：2字节
+	父类：2字节
+	接口数量：2字节
+	接口数组：2字节
+	Class文件的字段数：2字节
+	字段的具体信息
+		field_info{
+			u2 access_flags;
+			u2 name_index;
+			u2 descriptor_index;
+			u2 attributes_count;
+			attribute_info attributes[attributes_count];
+		}
+		ConstantValue_attribute{
+			u2 attribute_name_index;
+			u4 attribute_length;
+			u2 constantvalue_index;
+		}
+	Class文件的方法数：2字节
+	方法的具体信息
+		method_info{
+			u2 access_flags;
+			u2 name_index;
+			u2 descriptor_index;
+			u2 attributes_count;
+			attribute_info attributes[attributes_count];
+		}
+		方法访问标记取值
+		标记名称				值
+		ACC_SYNCHRONIZED	0x0020
+		ACC_BRIDGE			0x0040
+		ACC_VARARGS		0x0080
+		ACC_NATIVE			0x0100
+		ACC_STRICT			0x0800
+		attribute_info{
+			u2 attribute_name_index;
+			u4 attribute_length;
+			u1 info[attribute_length];
+		}
+		常用属性
+		ConstantValue：字段常量
+		Code：方法的字节码
+		StackMapTable：Code属性的描述属性，用于字节码变量类型验证
+		Exceptions：方法的异常信息
+		SourceFile：类文件的属性，表示生成这个类的源码
+		LineNumberTable：Code属性的描述属性，描述行号和字节码的对应关系
+		LocalVariableTable：Code属性的描述属性，描述函数的局部变量
+		BootstrapMethods：类文件的属性，存放类的引导方法。用于invokeDynamic
+	Class文件的属性数：2字节
+	方法的执行主体—Code属性
+	Code_attribute{
+		u2 attribute_name_index;
+		u4 attribute_length;
+		u2 max_stack;
+		u2 max_locals;
+		u4 code_length;
+		u1 code[code_length];
+		u2 exception_table_length;
+		{
+			u2 start_pc;
+			u2 end_pc;
+			u2 handler_pc;
+			u2 catch_type;
+		}exception_table[exception_table_length];
+		u2 attributes_count;
+		attribute_info attributes[attributes_count];
+	}
+	记录行号—LineNumberTable属性（code属性的属性）
+	LineNumberTable_attribute{
+		u2 attribute_name_index;
+		u4 attribute_length;
+		u2 line_number_table_length;
+		{
+			u2 start_pc;
+			u2 line_number;
+		}line_number_table[line_number_table_length];
+	}
+	保存局部变量和参数—LocalVariableTable属性（code属性的属性）
+	LocalVariableTable_attribute{
+		u2 attribute_name_index;
+		u4 attribute_length;
+		u2 local_variable_table_length;
+		{
+			u2 start_pc;
+			u2 length;
+			u2 name_index;
+			u2 descriptor_index;
+			u2 index;
+		}local_variable_table[local_variable_table_length];
+	}
+	加快字节码校验—StackMapTable属性（code属性的属性）
+	StackMapTable_attribute{
+		u2 attribute_name_index;
+		u4 attribute_length;
+		u2 number_of_entries;
+		stack_map_frame  entries[number_of_entries];
+	}
+	StackMapTable结构中的stack_map_frame被定义为一个枚举值，如下
+	union stack_map_frame{
+		same_frame;
+		same_locals_1_stack_item_frame;
+		same_locals_1_stack_item_frame_extended;
+		chop_frame;
+		same_frame_extended;
+		append_frame;
+		full_frame;
+	}
+	same_frame{
+		u1 frame_type = SAME;/*0-63*/
+	}
+	same_locals_1_stack_item_frame{
+		u1 frame_type = SAME_LOCALS_1_STACK_ITEM;/*64-127*/
+		verification_type_info stack[1];
+	}
+	same_locals_1_stack_item_frame_extended{
+		u1 frame_type = SAME_LOCALS_1_STACK_ITEM_EXTENDED;/*247*/
+		u2 offset_delta;
+		verification_type_info stack[1];
+	}
+	chop_frame{
+		u1 frame_type = CHOP;/*248-250*/
+		u2 offset_delta;
+	}
+	same_frame_extended{
+		u1 frame_type = SAME_FRAME_EXTENDED;/*251*/
+		u2 offset_delta;
+	}
+	append_frame{
+		u1 frame_type = APPEND;/*252-254*/
+		u2 offset_delta;
+		verification_type_info locals[frame_type - 251];
+	}
+	full_frame{
+		u1 frame_type = FULL_TYPE;/*255*/
+		u2 offset_delta;
+		u2 number_of_locals;
+		verification_type_info locals[number_of_locals];
+		u2 number_of_stack_items;
+		verification_type_info stack[number_of_stack_items];
+	}
+	抛出异常—Exceptions属性（方法的属性）
+	Exceptions_attribute{
+		u2 attribute_name_index;
+		u4 attribute_length;
+		u2 number_of_exceptions;
+		u2 exception_index_table[number_of_eceptions];
+	}
+	SourceFile属性（Class文件的属性）
+	SourceFile_attribute{
+		u2 attribute_name_index;
+		u4 attribute_length;
+		u2 sourcefile_index;
+	}
+	BootstrapMethods属性
+	BootstrapMethods_attribute{
+		u2 attribute_name_index;
+		u4 attribute_length;
+		u2 num_bootstrap_methods;
+		{
+			u2 bootstrap_method_ref;
+			u2 num_bootstrap_arguments;
+			u2 bootstrap_arguments[num_bootstrap_arguments];
+		} bootstrap_methods[num_bootstrap_methods];
+	}
+	内部类—InnerClasses属性（Class文件的属性）
+	InnerClasses_attribute{
+		u2 attribute_name_index;
+		u4 attribute_length;
+		u2 number_of_classes;
+		{
+			u2 inner_class_info_index;
+			u2 outer_class_info_index;
+			u2 inner_name_index;
+			u2 inner_class_access_flags;
+		}classes[number_of_classes];
+	}
+	将要废弃的通知—Deprecated属性
+	Deprecated_attribute{
+		u2 attribute_name_index;
+		u4 attribute_length;
+	}
+24、操作字节码ASM
