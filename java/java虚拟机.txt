@@ -651,3 +651,142 @@
 		u4 attribute_length;
 	}
 24、操作字节码ASM
+25、Class装载系统
+    看懂Class文件的装载流程
+	加载（ClassLoader类加载器）
+		通过类的全名，获取类的二进制数据流
+		解析类的二进制数据流为方法区内的数据结构
+		创建java.lang.Class类的实例，表示该类型
+	连接
+		验证：保证加载的字节码是合法、合理并符合规范的
+			格式检查：魔数检查、版本检查、长度检查
+			语义检查：是否继承final、是否有父类、抽象方法是否有实现
+			字节码验证：跳转指令是否指向正确的位置、操作数类型是否合理（栈映射帧就在这个阶段）
+			符号引用验证
+		准备：为类分配内存空间，设置初始值，常量字段的赋值
+		类型		默认初始值
+		int 		0
+		long		0L
+		short		(short)0
+		char		\u0000
+		boolean		false
+		reference	null
+		float		0f
+		double		0f
+		解析：将类、接口、字段、方法的符号引用转为直接引用，也就是得到类或字段、方法在内存中的指针或者偏移量
+	初始化：执行类的初始化方法<clinit>（由类静态成员的赋值语句和static语句合并产生的）
+		<clinit>是带锁线程安全的，多线程下进行类初始化，可能会引起死锁
+	类装载的条件（主动使用）
+		当创建一个类的实例时（new、反射、克隆、反序列化）
+		当调用类的静态方法时（即使用了字节码invokestatic指令）
+		当使用类或接口的静态字段时（final常量除外），使用getstatic或putstatic
+		当使用java.lang.reflect包中的方法反射类的方法时
+		当初始化子类时，要求先初始化父类
+		作为启动虚拟机，含有main()方法的那个类
+    掌握ClassLoader
+	主要作用就是从系统外部获得Class二进制数据流，只能影响到类的加载
+	CLassLoader的分类
+		BootStrap ClassLoader（启动类加载器）
+			完全由C代码实现，在Java中没有对象与之对应，系统的核心类就是由启动类加载器进行加载的
+		Extension ClassLoader（扩展类加载器）
+		APP ClassLoader（系统类加载器）
+		自定义类加载器
+		自底向上检查类是否加载、自顶向下尝试加载类
+		CLassLoader的双亲委托模式
+		弊端：顶层的CLassLoader无法访问底层的CLassLoader所加载的类（通过上下文加载器可以访问）
+		突破双亲模式（重载CLassLoader，例如Tomcat和OSGi框架）
+		热替换的实现：在程序的运行过程中，不停止服务，只通过替换程序文件来修改程序的行为
+		两个不同CLassLoader加载同一个类，在虚拟机内部，会认为这2个类是完全不同的
+26、字节码的执行
+	javap工具的使用
+	常量入栈指令
+		const
+		push
+		ldc
+	局部变量压栈指令
+		xload
+		xload_n：将第n个局部变量压入操作数栈（n为0-3）
+		xaload：将数组元素压栈
+		x取值（I：int整数，l：长整数，f：浮点数，d：双精度浮点，a:对象索引，b：byte，c：char，s：short）
+	出栈装入局部变量表指令
+		xstore
+		xstore_n
+		xastore
+	通用型操作
+		nop：0x00，什么都不做，用于调试、占位
+		dup：将栈顶元素复制一份再次压入栈顶
+		pop：把一个元素从栈顶弹出，直接废弃
+	类型转换指令
+		x（I,f,l,d,y）2y(I,f,l,d,c,s,b)
+	运算指令
+		加法：iadd、ladd、fadd、dadd
+		减法：isub、lsub、fsub、dsub
+		乘法：imul、lmul、fmul、dmul
+		除法：idiv、ldiv、fdiv、ddiv
+		取余：irem、lrem、frem、drem
+		数值取反：ineg、lneg、fneg、dneg
+		自增：iinc
+		位移：ishl、ishr、iushr、lshl、lshr、lushr
+		按位或：ior、lor
+		按位与：iand、land
+		按位异或：ixor、lxor
+	对象/数组操作指令
+		创建指令：new、newarray、anewarray、multianewarray
+		字段访问：getfield、putfield、getstatic、putstatic
+		类型检查：checkcast、instanceof
+		数组操作：xastore、xaload、arraylength
+	比较控制指令
+		比较：dcmpg、dcmpl、fcmpg、fcmpl、lcmp
+		条件跳转：ifeq、iflt、ifle、ifne、ifgt、ifge、ifnull、ifnonnull
+		比较条件跳转：if_icmpeq、if_icmpne、if_icmplt、if_icmpgt、if_icmple、if_icmpge、if_acmpeq、if_acmpne
+		多条件分支跳转：tableswitch、lookupswitch
+		无条件跳转：goto
+	函数调用与返回指令
+		函数调用：invokevirtual、invokeinterface、invokespecial、invokestatic、invokedynamic
+		返回：xreturn（x:i,l,f,d,a,空）
+	同步控制：monitorenter、monitorexit（监视器）
+27、再看ASM（CGLIB的底层实现）
+28、Java Agent（动态修改类的实现）
+29、动态函数调用
+	invokedynamic指令
+	方法句柄（java.lang.invoke）
+		反射是Java语言层面进行方法调用模拟，方法句柄是在Java字节码层面进行函数调用，执行效率要高于反射
+	调用点
+		常量调用点
+		可变调用点
+		易变调用点
+	启动方法
+	方法类型
+30、静态编译优化
+	javac编译时
+		编译时计算
+		变量字符串的连接
+		基于常量的条件语句裁剪
+		switch语句的优化
+	JIT即时编译，运行时
+	目的是避免函数被解释执行，而是将整个函数体编译成机器码，每次函数执行时，只执行编译后的机器码即可，执行效率大幅度提升。
+	Java虚拟机的3中执行方式
+		解释执行：-Xint
+		混合模式（默认情况）：-Xmixed
+		编译执行：-Xcomp
+	JIT编译阈值
+	-XX:CompileThreshold:设置这个阈值
+	-XX:+PrintCompilation：打印即时编译的日志
+	热点代码：调用频率高的函数（大于编译阈值）
+	多级编译器
+		客户端编译器C1
+		服务端编译器C2
+	多级编译的策略
+		0级（解释执行）：不采集性能监控数据
+		1级（简单的C1编译）：采用C1编译器，进行最简单的快速编译，根据需要采集性能数据
+		2级（有限的C1编译）：采用C1编译器，进行更多的优化编译，可能会根据第1级采集的性能统计数据，进一步优化编译代码
+		3级（完全C1编译）：完全使用C1编译器的所有功能，会采集性能数据进行优化
+		4级（C2编译）：完全使用C2进行编译，进行完全的优化
+	-XX:+TieredCompilation（打开多级编译器的策略，在-server模式下）
+	OSR（栈上替换）：不等待函数运行结束，在循环体内就将代码替换为编译版本的技术
+		回边：就是字节码指令中，向后跳转的指令
+		回边计数器、回边指令
+	方法内联：-XX:+Inline：打开内联优化
+		-XX:FreqInlineSize：设置热点方法进行内联的体积上限
+	设置代码缓存大小：-XX:ReservedCodeCacheSize
+		代码缓存空间的清理也是在GC是完成的
