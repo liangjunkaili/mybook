@@ -64,3 +64,5 @@
     E elementData(int index) {
         return (E) elementData[index];
     }
+3、如何产生null object？
+4、如何剔除？
