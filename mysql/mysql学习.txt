@@ -51,7 +51,7 @@
 			dirty buffer：内存中新写入的数据还没有刷新到磁盘，跟磁盘中数据不一致
 		Buffer链表结构
 			free list：把那些free状态的buffer都串联起来
-			lru list：把那些鱼磁盘数据一致，并且最近最少被使用的buffer串联起来，释放出free buffer，page调到内存中便于使用新的可用buffer
+			lru list：把那些与磁盘数据一致，并且最近最少被使用的buffer串联起来，释放出free buffer，page调到内存中便于使用新的可用buffer
 			flush list：把那些dirty buffer串联起来，为了方便刷新线程把脏数据刷到磁盘。
 	b、线程
 		master Thread：后台线程中的主线程，优先级别最高。
