@@ -1,0 +1,54 @@
+1、redis的数据结构类型
+	string:可以是字符串、整数、浮点数
+		get：获取存储在给定键中的值
+		set：设置存储在给定键中的值
+		del：删除存储在给定键中的值
+		incr：incr key-name 将键存储的值加上1
+		decr：decr key-name 将键存储的值减去1
+		incrby：incrby key-name amount将键存储的值加上整数amount
+		decrby：decrby key-name amount将键存储的值减去整数amount
+		incrbyfloat：incrbyfloat key-name amount将键存储的值加上浮点数amount
+		append：将值value追加到给定键key-name当前存储的值得末尾
+		getrange：获取一个由偏移量start至偏移量end范围内所有字符组成的子串，包括start和end在内
+		setrange：将从start偏移量开始的子串设置为给定值
+		getbit：将字符串看做是二进制位串，并返回位串中偏移量为offset的二进制位的值
+		setbit：将字符串看做是二进制位串，并将位串中偏移量为offset的二进制位的值设置为value
+		bitcount：统计二进制位串里面值为1的二进制位的数量，如果给定了可选的start偏移量和end偏移量，那么只对偏移量指定范围内的二进制位进行统计
+		bittop：对一个或多个二进制位串执行包括并、或、异或、非在内的任意一种为运算操作，并将计算得出的结果保存在dest-key键里面
+	list：有序，可重复
+		rpush：将给定值推入列表的右端
+		lpush：将给定值推入列表的左端
+		lrange：获取列表在给定范围上的所有值
+		lindex：获取列表在给定位置上的单个元素
+		lpop：从列表的左端弹出一个值，并返回被弹出的值
+		rpop：从列表的右端弹出一个值，并返回被弹出的值
+		ltrim：对列表进行修剪，只保留从start偏移量到end偏移量范围内的元素，包括start和end
+		blpop：从第一个非空列表中弹出位于最左端的元素，或者在timeout秒之内阻塞并等待可弹出的元素出现
+		brpop：从第一个非空列表中弹出位于最右端的元素，或者在timeout秒之内阻塞并等待可弹出的元素出现
+		rpoplpush：从source-key列表中弹出位于最右端的元素，然后将这个元素推入dest-key列表的最左端，并向用户返回这个元素
+		brpoplpush：从source-key列表中弹出位于最右端的元素，然后将这个元素推入dest-key列表的最左端，并向用户返回这个元素，如果source-key为空，那么在timeout秒之内阻塞并等待可弹出的元素出现
+	set：无序，不可重复
+		sadd：将给定元素添加到集合，并返回被添加元素当中原本并不存在与集合里面的元素数量
+		smembers：返回集合包含的所有元素
+		sismember：检查给定元素是否存在于集合中
+		srem：如果给定的元素存在于集合中，那么移除这个元素，并返回被移除元素的数量
+		scard：返回集合包含的元素的数量
+		srandmember：从集合里面随机地返回一个或多个元素，当count为正数时，命令返回的随机元素不会重复，当count为负数时，命令返回的随机元素可能会出现重复
+		spop：随机地移除集合中的一个元素，并返回被移除的元素
+		smove：如果集合source-key包含元素item，那么从集合source-key里面移除元素item，并将元素item添加到集合dest-key中，如果item被成功移除，那么命令返回1，否则返回0
+		sdiff：返回那些存在于第一个集合、但不存在于其他集合中的元素（差集运算）
+		sdiffstore：将那些存在于第一个集合但并不存在于其他集合中的元素存储到dest-key键里面
+		sinter：返回那些同时存在于所有集合中的元素
+		sinterstore：将那些同时存在于所有集合的元素存储到dest-key键里面
+		sunion：返回那些至少存在于一个集合中的元素
+		sunionstore：将那些至少存在于一个集合中的元素存储到dest-key键里面
+	hash：存储多个键值对之间的映射
+		hset：在散列里面关联起给定的键值对
+		hget：获取指定散列键的值
+		hgetall：获取散列包含的所有键值对
+		hdel：如果给定键存在于散列里面，那么移除这个键
+	zset：存储键值对，键是成员，各不相同，值是分值，必须为浮点数，既可以根据成员访问元素，又可以根据分值以及分值的排列顺序来访问元素的结构
+		zadd：将一个带有给定分值的成员添加到有序集合里面
+		zrange：根据元素在有序排列中所处的位置，从有序集合里面获取多个元素
+		zrangebyscore：获取有序集合在给定分值范围内的多有元素
+		zrem：如果给定成员存在于有序集合，那么移除这个成员
