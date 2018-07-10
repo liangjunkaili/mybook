@@ -216,3 +216,42 @@
 	数据库管理
 		select DBIndex：切换数据库
 		flushdb/flushall：用于清除数据库
+9、持久化
+		RDB：把当前进程数据生成快照保存到硬盘的过程，
+			优点
+				是一个紧凑压缩的二进制文件，代表redis在某个时间点上的数据快照，非常适合用于备份，全量复制等场景
+				redis加载RDB恢复数据远远快于AOF的方式
+			缺点
+				没办法做到实时持久化、秒级持久化
+				使用特定二进制格式保存，redis版本演进过程中有多个格式的RDB版本，存在老版本无法兼容新版格式的问题
+			手动触发
+				save：阻塞当前redis服务器，直到RDB过程完成为止，对于内存比较大的实例会造成长时间阻塞，线上不建议使用。
+				bgsave：redis进程执行fork操作创建子进程，RDB持久化过程由子进程负责，完成后自动结束。阻塞只发生在fork阶段，一般时间很短。
+			自动触发
+				使用save相关配置。save m n
+				如果从节点执行全量复制操作，主节点自动执行bgsave生成RDB文件并发送给从节点
+				执行debug reload命令重新加载redis时，也会自动触发save操作
+				默认情况下执行shutdown命令时，如果没有开启AOF持久化功能则自动执行bgsave。
+			bgsave运作流程：
+				执行bgsave命令，redis父进程判断当前是否存在正在执行的子进程（RDB/AOF子进程），如果存在bgsave命令直接返回
+				父进程执行fork操作创建子进程，fork操作过程中父进程会阻塞，通过info stats命令查看latest_fork_usec选项，可以获取最近一个fork操作的耗时，单位为微妙
+				父进程fork完成后，bgsave返回“Background saving started”信息并不再阻塞父进程，可以继续响应其他命令
+				子进程创建RDB文件，根据父进程内存生成临时快照文件，完成后对原有文件进行原子替换。执行lastsave命令可以获取最后一次生成RDB的时间，对应info统计的rdb_last_save_time选项
+				进程发送信号给父进程表示完成，父进程更新统计信息
+			保存在dir配置指定的目录下，文件名通过的吧filename指定
+			采用LZF算法对生成的RDB文件做压缩处理
+			如果redis加载损坏的RDB文件时拒绝启动（使用redis-check-dump工具检进行测）
+		AOF：以独立日志的方式记录每次写命令，重启时再重新执行AOF文件中的命令达到恢复数据的目的。
+			解决了数据持久化的实时性，是redis持久化的主流方式
+			开启AOF：appendonly yes
+			文件名通过appendfilename配置，默认appendonly.aof
+			工作流程：
+				所有的写入命令会追加到aof_buf中
+					写入的内容直接是文本协议格式
+				AOF缓冲区根据对应的策略向硬盘做同步操作
+					appendfsync：
+						always
+						everysec
+						no
+				随着AOF文件越来越大，需要定期对AOF文件进行重写，达到压缩的目的。
+				当redis服务器重启时，可以加载AOF文件进程数据恢复
