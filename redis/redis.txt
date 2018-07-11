@@ -250,8 +250,57 @@
 					写入的内容直接是文本协议格式
 				AOF缓冲区根据对应的策略向硬盘做同步操作
 					appendfsync：
-						always
-						everysec
+						always：每次写入都要同步AOF文件
+						everysec：建议的同步策略
 						no
+					write操作：会触发延迟写机制
+					fsync针对单个文件操作，做强制硬盘同步，fsync将阻塞直到写入硬盘完成后返回，保证了数据持久化。
 				随着AOF文件越来越大，需要定期对AOF文件进行重写，达到压缩的目的。
+					进程内超时的数据不再写入文件
+					旧的AOF文件含有无效命令，重写使用进程内数据直接生成，这样新的AOF文件只保留最终数据的写入命令
+					多条写命令可以合并为一个
+					手动触发：直接调用bgrewriteaof命令
+					自动触发：根据auto-aof-rewrite-min-size和auto-aof-rewrite-percentage确定自动触发时机
+					重写流程：
+						执行AOF重写请求
+						父进程执行fork创建子进程，开销等同于bgsave过程
+						主进程fork操作完成后，继续响应其他命令。所有修改命令依然写入AOF缓冲区并根据appendfsync策略同步到硬盘，保证原有AOF机制正确性
+						由于fork操作运用写时复制技术，子进程只能共享fork操作时的内存数据
+						子进程根据内存快照，按照命令合并规则写入到新的AOF文件
+						新AOF文件写入完成后，子进程发送信号给父进程，父进程更新统计信息
+						父进程把AOF重写缓冲区的数据写入到新的AOF文件
+						使用新AOF文件替换老文件，完成AOF重写
 				当redis服务器重启时，可以加载AOF文件进程数据恢复
+					AOF持久化开启且存在AOF文件时，优先加载AOF文件
+					AOF关闭或者AOF文件不存在时，加载RDB文件
+					加载AOF/RDB文件成功后，redis启动成功
+					AOF/RDB文件存在错误时，redis启动失败并打印错误信息
+	问题定位于优化
+		fork操作：耗时跟进程总内存量息息相关
+			优先使用物理机或者高效支持fork操作的虚拟机技术，避免使用Xen
+			控制redis实例最大可用内存，fork耗时跟内存量成正比，线上建议每个redis实例内存控制在10GB以内
+			合理配置Linux内存分配策略，避免物理内存不足导致fork失败
+			降低fork操作的频率
+		子进程（负责AOF或者RDB文件的重写）开销监控和优化
+			CPU
+				开销分析
+				消耗优化
+			内存
+				消耗分析
+				消耗监控
+			硬盘
+				开销分析
+				开销优化
+					不要和其他高硬盘负载的服务部署在一起
+					AOF重写时会消耗大量硬盘的IO，开启no-appendfsync-on-rewrite，在AOF重写期间不做fsync操作
+					对于单机配置多个redis实例的情况，可以配置不同实例分盘存储AOF文件
+		AOF追加阻塞
+10、功能
+		慢查询分析（只统计命令执行的时间）
+			预设阈值怎么设置：slowlog-log-slower-than
+			慢查询记录存放在哪：内存列表，slowlog-max-len：列表的最大长度
+			slowlog get [n]：获取慢查询日志
+			slowlog len：获取慢查询日志列表当前的长度
+			slowlog reset：慢查询日志重置
+		 Pipeline
+		 事务与Lua
