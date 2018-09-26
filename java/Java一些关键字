@@ -4,3 +4,15 @@ final
 static
 assert
 synthetic
+volatile
+transient
+private
+public
+protected
+abstract
+
+class
+interface
+enum
+访问控制修饰符 : default, public , protected, private
+非访问控制修饰符 : final, abstract, strictfp
