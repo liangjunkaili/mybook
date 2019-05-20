@@ -178,7 +178,15 @@ Redis 4.0.10
     而AOF格式的内存则用于记录最近发生了变化的数据
   新增MEMORY内存命令，可以用于查看某个key的内存使用、查看整体内存使用细节、申请释放内存、深入查看内存分配器内部状态等功能
   兼容NAT和Docker
-
+redis 5.0
+	全新的数据类型：Streams
+	cluster manager with c
+	RDB现在存储LFU和LRU信息
+	新的有序集命令：ZPOPMIN / MAX和阻塞变体
+	Jemalloc升级到5.1版
+	许多带子命令的命令现在都有一个HELP子命令
+	改进HyperLogLog实现中的网络
+	更好的内存报告功能
 
 2009-03-11  retwis-0.1  Retwis是一个简单的Twitter克隆版，用PHP + Redis编写，作为数据库的Hello World应用程序   弃用
 2009-03-16  retwis-0.2  就像retwis0.1，但是有一些bug被修复，还有一个SORT命令的例子。要求Redis SVN工作(排序)   弃用
