@@ -1,0 +1,46 @@
+创建一个spring boot项目，启动。。。
+每个项目都有一个*Application的入口类，里面有一个main方法，main方法无用多说，这是一个标准的java入口方法。
+除此之外就是SpringApplication.run和@SpringBootApplication注解了，接下来，我们挨个看看这两个到底是什么东东？
+先看@SpringBootApplication的源码，以下我会剔除一些部分，只讲spring boot中新出现的。
+	@SpringBootConfiguration-->@Configuration-->@Component-->@Indexed
+	@EnableAutoConfiguration
+	@ComponentScan(
+		excludeFilters = {@Filter(
+		type = FilterType.CUSTOM,
+		classes = {TypeExcludeFilter.class}
+	), @Filter(
+		type = FilterType.CUSTOM,
+		classes = {AutoConfigurationExcludeFilter.class}
+	)}
+	)
+	public @interface SpringBootApplication {
+		@AliasFor(
+			annotation = EnableAutoConfiguration.class
+		)
+		Class<?>[] exclude() default {};
+		@AliasFor(
+			annotation = EnableAutoConfiguration.class
+		)
+		String[] excludeName() default {};
+		@AliasFor(
+			annotation = ComponentScan.class,
+			attribute = "basePackages"
+		)
+		String[] scanBasePackages() default {};
+		@AliasFor(
+			annotation = ComponentScan.class,
+			attribute = "basePackageClasses"
+		)
+		Class<?>[] scanBasePackageClasses() default {};
+	}
+@ComponentScan这个注解是：组件扫描
+	TypeExcludeFilter
+	AutoConfigurationExcludeFilter
+	BeanNameGenerator
+	AnnotationScopeMetadataResolver
+	"**/*.class"
+@EnableAutoConfiguration这个注解是：自动配置
+	AutoConfigurationImportSelector
+	SpringFactoriesLoader
+	META-INF/spring.factories：默认配置
+@SpringBootConfiguration这个注解是：自身也是一个组件

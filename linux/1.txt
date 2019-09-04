@@ -1,0 +1,24 @@
+1、w查看当前系统的负载（CPU）
+
+2、vmstat监控系统的状态
+
+3、top显示进程所占的系统资源
+
+4、sar监控系统状态
+
+5、free查看内存使用状况
+
+6、ps查看系统进程
+
+7、netstat查看网络状况
+
+8、tcpdump -nn -i eth0抓包
+
+9、ifconfig查看网卡ip
+
+10、Linux系统日志
+	/var/log/messages
+	dmesg | less
+	last |head
+	
+11、xargs应用

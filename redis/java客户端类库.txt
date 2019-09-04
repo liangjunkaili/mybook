@@ -19,3 +19,18 @@ Redisson
 		<artifactId>redisson</artifactId>
 		<version>3.10.7</version>
 	</dependency>
+
+	
+redis如何做到资源的合理使用？
+	什么模式？多大内存？连接数？带宽？
+
+自己搭建主机？还是使用云服务？这样就会涉及到成本的考虑
+版本的选择？
+
+运维相关
+
+性能、成本、开发难度
+
+开发-----运维
+
+各个版本的变化

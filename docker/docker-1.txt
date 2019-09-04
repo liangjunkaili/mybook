@@ -1,0 +1,23 @@
+#个人博客WordPress的搭建
+docker run --name db --env MYSQL_ROOT_PASSWORD=example -d mariadb
+docker run --name MyWordPress --link db:mysql -p 7000:80 -d wordpress
+#GitLab的搭建
+docker run --name gitlab-postgresql -d --env 'DB_NAME=gitlabhq_production' \
+--env 'DB_USER=gitlab' --env 'DB_PASS=password' sameersbn/postgresql
+docker run --name gitlab-redis -d sameersbn/redis
+docker run --name gitlab -d --link gitlab-postgresql:postgresql --link gitlab-redis:redisio \
+--publish 10022:22 --publish 8080:80 \
+--env 'GITLAB_PORT=8080' --env 'GITLAB_SSH_PORT=10022' \
+--env 'GITLAB_SECRETS_SECRET_KEY_BASE=long-and-random-alpha-numeric-string' \
+--env 'GITLAB_SECRETS_DB_KEY_BASE=long-and-random-alpha-numeric-string' \
+--env 'GITLAB_SECRETS_OTP_KEY_BASE=long-and-random-alpha-numeric-string' \
+sameersbn/gitlab
+#搭建redmine
+docker run --name=postgresql-redmine -d \
+--env 'DB_NAME=redmine_production' \
+--env 'DB_USER=redmine' --env 'DB_PASS=password' \
+sameersbn/postgresql
+docker run --name=redmine -d \
+--link=postgresql-redmine:postgresql --publish=8080:80 \
+--env 'REDMINE_PORT=8080' \
+sameersbn/redmine
