@@ -1,0 +1,14 @@
+单节点Hadoop的安装
+1、支持的平台：Linux
+2、需要的软件
+    jdk
+        Apache Hadoop 3.x now support only Java 8
+        Apache Hadoop from 2.7.x to 2.x support Java 7 and 8
+    ssh（运行sshd）
+    pdsh
+3、修改配置etc/hadoop/hadoop-env.sh
+     新增export JAVA_HOME=/usr/java/latest
+     $ mkdir input
+     $ cp etc/hadoop/*.xml input
+     $ bin/hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-3.1.2.jar grep input output 'dfs[a-z.]+'
+     $ cat output/*
