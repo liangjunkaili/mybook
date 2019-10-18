@@ -1,0 +1,27 @@
+关于tomcat的生命周期，在这系统的聊一下
+统一接口----Lifecycle
+相关接口：LifecycleListener/LifecycleEvent/LifecycleState
+实现类：
+    LifecycleBase
+        添加了四个抽象方法initInternal、startInternal、stopInternal、destroyInternal
+        添加了新的方法fireLifecycleEvent(触发LifecycleEvent)/setStateInternal(更新组件状态)
+    LifecycleMBeanBase extends LifecycleBase
+    StandardServer、StandardService等组件继承LifecycleMBeanBase，并重写initInternal、startInternal、stopInternal、destroyInternal方法
+几个动作：
+    init：NEW--->INITIALIZING--->INITIALIZED
+    start:INITIALIZED--->STARTING_PREP--->STARTING--->STARTED
+    stop:STARTED--->STOPPING_PREP--->STOPPING--->STOPPED
+    destroy:XXX--->DESTROYING--->DESTROYED
+几种状态：
+    NEW(false, null),创建
+    INITIALIZING(false, Lifecycle.BEFORE_INIT_EVENT),正在初始化
+    INITIALIZED(false, Lifecycle.AFTER_INIT_EVENT),初始化ok
+    STARTING_PREP(false, Lifecycle.BEFORE_START_EVENT),启动前
+    STARTING(true, Lifecycle.START_EVENT),启动中
+    STARTED(true, Lifecycle.AFTER_START_EVENT),启动后
+    STOPPING_PREP(true, Lifecycle.BEFORE_STOP_EVENT),停止前
+    STOPPING(false, Lifecycle.STOP_EVENT),停止中
+    STOPPED(false, Lifecycle.AFTER_STOP_EVENT),停止后
+    DESTROYING(false, Lifecycle.BEFORE_DESTROY_EVENT),销毁中
+    DESTROYED(false, Lifecycle.AFTER_DESTROY_EVENT),销毁完
+    FAILED(false, null);失效

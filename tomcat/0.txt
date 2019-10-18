@@ -1,0 +1,51 @@
+说起tomcat可能大家都不陌生，但是大部分应该也只是当做一个web容器用一用而已，让你过多的去讲，可能就会语塞了吧。
+tomcat是什么？
+    servlet容器+WEB服务器
+如何利用tomcat实现我们的功能？
+    举个例子，假如我们要做一个门户网站，可以让用户在自己的电脑上看见我们的产品。我们会怎么做呢？
+    首先我们会准备一台服务器（或者在阿里云买一台），配置好jdk，安装好tomcat，然后把打包好的程序放到webapps下面，启动tomcat，就OK了。
+    就可以使用http://localhost:8080/index.html访问我们的网站了。
+http是什么呢？
+    通信协议，一个应用层协议，由request和response组成
+我们在服务器启动tomcat服务器，并监听8080端口，那么当有连接过来时，就会由连接器（Connector）组件接收
+
+tomcat总览(8.5.42)
+通过server.xml可以看出：
+    Server（tomcat运行实例）
+       Listener（监听器组件，方便扩展）
+       GlobalNamingResources（方便集成JNDI）
+       Service（核心组件，服务的抽象，代表请求从接收到处理的所有组件的集合，可包含多个）
+            Executor（线程池）
+            Connector（接收client连接和消息报文，解析报文，HTTP和AJP）
+                Http11Protocol
+                    JIOEndpoint
+                        Acceptor（tomcat启动后，监听是否有client socket连接并接收socket）
+                        Executor（处理连接）
+                    Http11Processor（读取报文，解析request）
+                Mapper（匹配由哪个容器处理请求）
+                CoyoteAdaptor（连接Connector和Engine）
+            Engine（全局Servlet引擎，只能包含一个）
+                Listener
+                AccessLog
+                Cluster
+                Pipeline（开始处理请求，负责调用Host的管道）
+                Realm
+                Host（虚拟主机）
+                    Listener
+                    AccessLog
+                    Cluster
+                    Pipeline（开始处理请求，负责调用Context的管道）
+                    Realm
+                    Context（Web应用抽象）
+                        Listener
+                        AccessLog
+                        Pipeline（开始处理请求，负责调用Wrapper的管道）
+                        Realm
+                        Loader
+                        Manager
+                        NamingResource
+                        Mapper
+                        Wrapper（Servlet）
+                            Servlet
+                            ServletPool
+                            Pipeline（开始处理请求，执行对应的servlet的处理方法，将结果输出到client）

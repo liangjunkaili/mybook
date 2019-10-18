@@ -1,0 +1,13 @@
+属性：
+    allowCasualMultipartParsing：默认是false
+    allowMultipleLeadingForwardSlashInPath：该属性的默认值为false，可以折叠多个/字符。若要禁用此行为，请将此属性设置为true。
+    altDDName：此上下文的可选部署描述符的绝对路径。这将覆盖位于/WEB-INF/web.xml的默认部署描述符。
+    backgroundProcessorDelay：
+    className：默认是org.apache.catalina.core.StandardContext
+    containerSciFilter：
+    cookies：默认是true
+    createUploadTargets：如果Tomcat试图为Servlet创建MultipartConfig中指定的临时上传位置(如果该位置不存在)，则将其设置为true。如果没有指定，将使用false的默认值。
+    crossContext：如果希望在此应用程序中调用ServletContext.getContext()来成功地返回在此虚拟主机上运行的其他web应用程序的请求分配器，请将其设置为true。在安全意识强的环境中设置为false(默认值)，使getContext()总是返回null。
+    docBase：此web应用程序的文档基础(也称为上下文根)目录
+    dispatchersUseEncodedPaths：控制用于获取请求分配器的调用中的路径是否需要编码，默认true
+    path：

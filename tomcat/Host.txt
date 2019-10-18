@@ -1,0 +1,27 @@
+属性：
+    appBase：此虚拟主机的应用程序基本目录，默认是webapps
+    xmlBase：虚拟主机的XML基本目录，默认是conf/<engine_name>/<host_name>
+    createDirs：如果设置为true, Tomcat将尝试在启动阶段创建属性appBase和xmlBase定义的目录。默认值为true。
+        如果设置为true，并且目录创建失败，将打印出一条错误消息，但不会停止启动顺序。
+    autoDeploy：Tomcat在运行时是否应该定期检查新的或更新的web应用程序，默认是true
+    backgroundProcessorDelay：
+    className：默认是org.apache.catalina.core.StandardHost
+    deployIgnore：定义了设置自动部署和部署启动时要忽略的路径。这个正则表达式是相对于appBase的
+    deployOnStartup：Tomcat启动时是否应该自动部署来自此主机的web应用程序。该标志的值默认为true
+    failCtxIfServletStartFails：设置为true，使每个子上下文的启动失败，如果它的任何一个具有启动时加载的>=0的servlet的启动失败，默认是false
+    name：域名或localhost
+    startStopThreads：此主机用于并行启动子上下文元素的线程数，默认是1
+    undeployOldVersions：此标志仅在autoDeploy为真时才适用。如果没有指定，将使用false的默认值。
+    deployXML：默认是true
+    copyXML：默认是false
+    errorReportValveClass：该主机将使用的错误报告阀的Java类名。这个阀门的职责是输出错误报告。
+        如果没有指定，则值org.apache.catalina.valve。默认情况下将使用ErrorReportValve。
+    unpackWARs：解压war包，默认是true
+    workDir：此主机的应用程序将使用的临时目录的路径名，如果没有指定，将在$CATALINA_BASE/work下面提供一个合适的目录。
+组件：
+    Context：web应用
+    AccessLog：访问日志
+    Pipeline：管道
+    Cluster：集群
+    Realm：域
+    HostConfig：生命周期监听器

@@ -1,0 +1,4 @@
+本篇说一下tomcat的类加载机制，
+主要的类是：ClassLoaderFactory、SecurityClassLoad
+    在Bootstrap中，初始化首先通过ClassLoaderFactory创建类加载器，然后将Common类加载器设置为线程上下文类加载器，
+    再通过SecurityClassLoad把tomcat的类加载进来，并通过反射将Common类加载器设置为Catalina的parentClassLoader。

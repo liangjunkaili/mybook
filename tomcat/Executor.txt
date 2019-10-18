@@ -1,0 +1,13 @@
+属性：
+    className：默认实现org.apache.catalina.core.StandardThreadExecutor
+    name：线程池的名字，要唯一
+    threadPriority：线程的优先级，默认是5
+    daemon：设置线程为守护线程，默认是true
+    namePrefix：线程名的前缀，默认是tomcat-exec-
+    maxThreads：活动线程的最大数量，默认为200
+    minSpareThreads：保持活动的线程的最小数量(空闲和活动)，默认为25
+    maxIdleTime：一个空闲线程关闭前的毫秒数，除非活动线程数小于或等于minSpareThreads。默认值为60000(1分钟)
+    maxQueueSize：在拒绝可运行任务之前，可以排队等待执行的最大可运行任务数。默认值是Integer.MAX_VALUE
+    prestartminSpareThreads：minSpareThreads是否应该在启动执行程序时启动，默认值都是false
+    threadRenewalDelay：如果配置了ThreadLocalLeakPreventionListener，它将通知执行程序停止上下文。上下文停止后，池中的线程将被更新。
+            为了避免同时更新所有线程，此选项设置任何2个线程更新之间的延迟。该值的单位是ms，默认值是1000 ms。如果值为负，则不更新线程。

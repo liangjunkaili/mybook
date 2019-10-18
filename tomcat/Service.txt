@@ -1,0 +1,7 @@
+两个属性：
+     className：默认实现org.apache.catalina.core.StandardService
+     name：service的名字，要唯一
+内部组件：
+    protected Connector connectors[] = new Connector[0];
+    protected final ArrayList<Executor> executors = new ArrayList<>();
+    private Engine engine = null;

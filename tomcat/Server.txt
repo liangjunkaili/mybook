@@ -1,0 +1,8 @@
+四个属性：
+    className：默认实现org.apache.catalina.core.StandardServer
+    address：默认是localhost，关闭tomcat的地址
+    port：默认是8005，关闭tomcat的端口
+    shutdown：默认是SHUTDOWN，关闭tomcat的命令
+内部组件：
+    private Service services[] = new Service[0];
+    private NamingResourcesImpl globalNamingResources = null;

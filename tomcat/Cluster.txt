@@ -1,0 +1,27 @@
+统一的接口：Cluster
+            CatalinaCluster extends Cluster
+实现类：    SimpleTcpCluster
+属性：
+    className：目前的唯一实现org.apache.catalina.ha.tcp.SimpleTcpCluster
+    channelSendOptions：默认是8
+    channelStartOptions：默认是Channel.DEFAULT，启动所有通道服务
+    heartbeatBackgroundEnabled：在容器后台线程上标记是否调用通道心跳。默认值为false。启用此标志不要忘记禁用通道心跳线程。
+    notifyLifecycleListenerOnFailure：标记如果所有ClusterListener不能接受通道消息，是否通知LifecycleListeners。默认值为false。
+内部组件：
+    Manager（多个）
+        Manager
+        ClusterManager extends Manager
+        ClusterManagerBase extends ManagerBase implements ClusterManager
+        默认实现org.apache.catalina.ha.session.DeltaManager extends ClusterManagerBase
+    Channel（一个）
+        默认实现org.apache.catalina.tribes.group.GroupChannel
+    Value（多个）
+        Valve
+        ClusterValve extends Valve
+        默认实现org.apache.catalina.ha.session.JvmRouteBinderValve extends ValveBase implements ClusterValve
+                org.apache.catalina.ha.tcp.ReplicationValve extends ValveBase implements ClusterValve
+    Deployer（一个）
+        ClusterDeployer
+        默认实现org.apache.catalina.ha.deploy.FarmWarDeployer
+    ClusterListener（多个）
+        默认实现org.apache.catalina.ha.session.ClusterSessionListener extends ClusterListener
