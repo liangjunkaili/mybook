@@ -1,0 +1,6 @@
+HashMap（哈希表+链表或红黑树）
+HashSet(通过HashMap实现的)
+LinkedHashMap（HashMap基础上Node变为双链表）
+LinkedHashSet（通过LinkedHashMap实现的）
+Hashtable（哈希表，节点为单链表，线程安全）
+ConcurrentHashMap（而采用了 CAS + synchronized 来保证并发安全性）
