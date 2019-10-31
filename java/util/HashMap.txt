@@ -1,8 +1,59 @@
+哈喽，这是我们日常开发的另一个大兄弟，大家应该都不陌生吧！
+public class HashMap<K,V> extends AbstractMap<K,V>
+    implements Map<K,V>, Cloneable, Serializable
+public abstract class AbstractMap<K,V> implements Map<K,V>
+Map<K,V>：键值对的一个集合
+    int size()
+    boolean isEmpty()
+    boolean containsKey(Object key)
+    boolean containsValue(Object value)
+    V get(Object key)
+    V put(K key, V value)
+    V remove(Object key)
+    void putAll(Map<? extends K, ? extends V> m)
+    void clear()
+    Set<K> keySet()
+    Collection<V> values()
+    Set<Map.Entry<K, V>> entrySet()
+    default V getOrDefault(Object key, V defaultValue)
+    default void forEach(BiConsumer<? super K, ? super V> action)
+    default void replaceAll(BiFunction<? super K, ? super V, ? extends V> function)
+    default V putIfAbsent(K key, V value)
+    default boolean remove(Object key, Object value)
+    default boolean replace(K key, V oldValue, V newValue)
+    default V replace(K key, V value)
+    default V computeIfAbsent(K key,Function<? super K, ? extends V> mappingFunction)
+    default V computeIfPresent(K key,BiFunction<? super K, ? super V, ? extends V> remappingFunction)
+    default V compute(K key,BiFunction<? super K, ? super V, ? extends V> remappingFunction)
+    default V merge(K key, V value,BiFunction<? super V, ? super V, ? extends V> remappingFunction)
+Map.Entry<K, V>：这个是一个内部接口，我们单独看看，因为他是Map中存储的数据结构定义
+    K getKey()
+    V getValue()
+    V setValue(V value)
+    public static <K extends Comparable<? super K>, V> Comparator<Map.Entry<K,V>> comparingByKey()
+    public static <K, V extends Comparable<? super V>> Comparator<Map.Entry<K,V>> comparingByValue()
+    public static <K, V> Comparator<Map.Entry<K, V>> comparingByKey(Comparator<? super K> cmp)
+    public static <K, V> Comparator<Map.Entry<K, V>> comparingByValue(Comparator<? super V> cmp)
+AbstractMap<K,V>：实现了Map的一些方法
+    下面两个方法未实现：
+    public V put(K key, V value)
+    public abstract Set<Entry<K,V>> entrySet()
+HashMap<K,V>：
+    static final int DEFAULT_INITIAL_CAPACITY = 1 << 4;默认初始容量
+    static final int MAXIMUM_CAPACITY = 1 << 30;
+    static final float DEFAULT_LOAD_FACTOR = 0.75f;
 	static final int TREEIFY_THRESHOLD = 8;
-	transient Node<K,V>[] table;
-	transient int modCount;
-	transient int size;
-	int threshold;
+	static final int MIN_TREEIFY_CAPACITY = 64;
+	static final int UNTREEIFY_THRESHOLD = 6;
+Node<K,V> implements Map.Entry<K,V>：HashMap中存储的数据结构
+TreeNode<K,V> extends LinkedHashMap.Entry<K,V>：HashMap中存储的数据结构
+（1）我们先来说一下它是如何存储的，首先根据key和hash函数计算出Node的哈希值（一个int值），
+然后看在table中是否已经有节点了，没有直接插入，有的话，看看是不是key和hash都一样，不一样的话，
+看看该节点是不是TreeNode，是的话就插入树的方法（2）；否则，看该节点的next是否为空，是的话，把新节点插入，
+否则，看看该节点的next的key和hash与新节点是否一样，是的话，跳出循环，否则继续找他的next，直到插入为止；
+当链表的节点数>=7时，执行链表转红黑树的方法（3）；如果该节点原来存在，根据onlyIfAbsent判断是否覆盖value。
+（2）先找到root节点，红黑树的操作TODO...
+（3）这块会判断哈希表的大小是否小于64，是的话，重新构造哈希表，否则将链表转为红黑树。
 1、put方法解读
 源码如下：
 	1、public V put(K key, V value) {
