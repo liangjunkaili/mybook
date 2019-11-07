@@ -1,0 +1,36 @@
+常用命令：
+    git add
+    git commit -m ""
+    git push 远程仓库 本地分支（或标签）
+    git pull
+    git merge 要合并的分支
+    git clone
+    git status
+    git reset --hard commit_id:回退到指定版本（对于执行过commit操作的回退）
+    git checkout -- file:丢失还没add的修改
+    git reset HEAD file:将已经add过到暂存区的文件撤回到工作区
+    git branch 查看分支
+    git branch Dev 创建分支
+    git checkout 分支 切换分支
+    git checkout -b name 创建+切换分支
+    git merge name 合并某个分支到当前分支
+    git branch -d name 删除分支
+    git remote 查看远程仓库
+    git tag 查看所有标签
+    git tag name <commit_id>打标签（commit_id可以不写）
+    git tag -d name 删除标签
+    git push origin --tags git push origin --tags
+获取git仓库？
+    1、现在git上创建远程库，然后git clone url
+    2、将本地以及有的项目上传到远程仓库，在目录中执行
+        git init
+        git add .(建议：最好使用精准的文件模式去提交，避免提交一些不需要的文件，当然这块可以采用.gitignore)
+        git commit -m "first commit"（注意备注要用“”，避免出现一些问题）
+        git remote add origin https://github.com/liangjunkaili/java.git
+        git push -u origin master
+取消git add之后的文件？
+    git rm --cached file
+问题1：git commit -m 'first commit'
+    error: pathspec 'commit'' did not match any file(s) known to git.
+    原因：单引号中出现了空格
+    解决方法：去除空格或者采用双引号就可以成功

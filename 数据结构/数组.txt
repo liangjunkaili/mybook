@@ -3,3 +3,27 @@ Vector（线程安全synchronized）
 Stack extends Vector
 CopyOnWriteArrayList（线程安全ReentrantLock）
 CopyOnWriteArraySet（通过CopyOnWriteArrayList实现）
+提出问题：
+    为什么数组要从0开始编号，而不是从1开始呢？
+        从1开始编号，每次随机访问数组元素都多了一次减法运算，对于CPU来说，就是多了一次减法指令，优化问题；
+        历史原因吧。
+    什么是数组？（数组支持随机访问，根据下标随机访问的时间复杂度为O(1)）
+        线性表、连续的内存空间、相同类型的数据
+        特性：随机访问
+        性能：借助CPU的缓存机制，预读数据
+    为什么数组的insert和delete会低效呢？
+        因为需要搬移数据，保持内存连续
+    那么什么情况可以避免这种低效的情况呢？
+        将insert的位置的值交换到最后，只需要一次
+        delete操作时，标记清除法，可以减少搬移次数
+    什么时候适合用数组什么时候适合用ArrayList呢？
+        ArrayList：动态扩容（优化点：事先指定数据大小）
+        业务开发（ArrayList）、注重性能（数组）
+    怎么理解标记清除垃圾回收算法？
+        分为标记和清除两个阶段，先标记需要回收的对象，然后统一回收标记的对象。（怎么确定是需要回收的对象？到GC Roots是不可达的对象）
+        两个问题：
+            效率问题
+            空间问题：内存碎片
+    二位数组的内存寻址公式？
+        arr[m][n]
+        对于arr[i][j](i<m,j<n)的地址为address = base_address+(i*n+j)*type_size

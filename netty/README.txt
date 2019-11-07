@@ -1,0 +1,136 @@
+netty版本4.1.33.Final
+分析一下源码，下面是源码目录
+io.netty.buffer
+io.netty.channel
+io.netty.bootstrap
+io.netty.handler
+io.netty.util
+io.netty.resolver
+好吧，开始吧！
+先看buffer下面有哪些内容呢？
+interface：
+    ByteBufAllocator（I）
+        AbstractByteBufAllocator（A）
+            PooledByteBufAllocator
+            UnpooledByteBufAllocator（F）
+    ByteBufAllocatorMetric（I）
+        PooledByteBufAllocatorMetric（F）
+        UnpooledByteBufAllocator.UnpooledByteBufAllocatorMetric
+    ByteBufAllocatorMetricProvider（I）
+        PooledByteBufAllocator
+        UnpooledByteBufAllocator（F）
+    ByteBufHolder（I）
+        DefaultByteBufHolder
+    PoolArenaMetric（I）
+        PoolArena（A）
+            DirectArena
+            HeapArena
+    PoolChunkListMetric（I）
+        PoolChunkList（F）
+    PoolChunkMetric（I）
+        PoolChunk（F）
+    PoolSubpageMetric（I）
+        PoolSubpage（F）
+Abstract Class：
+    ByteBuf（A）
+        AbstractByteBuf（A）
+            AbstractDerivedByteBuf（A）已废弃
+                AbstractUnpooledSlicedByteBuf（A）
+                    UnpooledSlicedByteBuf（D）
+                DuplicatedByteBuf已废弃
+                    UnpooledDuplicatedByteBuf（D）
+            AbstractReferenceCountedByteBuf（A）
+                AbstractPooledDerivedByteBuf（A）
+                    PooledDuplicatedByteBuf（F）
+                    PooledSlicedByteBuf（F）
+                CompositeByteBuf
+                    WrappedCompositeByteBuf（D）
+                        SimpleLeakAwareCompositeByteBuf（D）
+                            AdvancedLeakAwareCompositeByteBuf（F）
+                FixedCompositeByteBuf（F）
+                PooledByteBuf（A）
+                    PooledDirectByteBuf（F）
+                    PooledHeapByteBuf（D）
+                        PooledUnsafeHeapByteBuf（F）
+                    PooledUnsafeDirectByteBuf（F）
+                ReadOnlyByteBufferBuf（D）
+                    ReadOnlyUnsafeDirectByteBuf（F）
+                UnpooledDirectByteBuf
+                UnpooledHeapByteBuf
+                    UnpooledUnsafeHeapByteBuf（D）
+                UnpooledUnsafeDirectByteBuf
+                    UnpooledUnsafeNoCleanerDirectByteBuf（D）
+                    WrappedUnpooledUnsafeDirectByteBuf（F）
+        SwappedByteBuf已废弃
+            AbstractUnsafeSwappedByteBuf（A）
+                UnsafeDirectSwappedByteBuf（F）
+                UnsafeHeapSwappedByteBuf（F）
+        WrappedByteBuf（D）
+            SimpleLeakAwareByteBuf（D）
+                AdvancedLeakAwareByteBuf（F）
+            UnreleasableByteBuf（F）
+        EmptyByteBuf（F）
+Classes：
+    UnsafeByteBufUtil（F）
+    Unpooled（F）
+    PoolThreadCache（DF）
+    HeapByteBufUtil（DF）
+    ByteBufUtil（F）
+    ByteBufOutputStream
+    ByteBufInputStream
+
+下面我们来解读一下
+netty在AbstractByteBuf中引入了readerIndex、writerIndex简化了缓冲区的读写操作。
+如何分配缓冲区？
+    PooledByteBufAllocator
+    UnpooledByteBufAllocator
+常用的操作缓冲区的方法
+如何释放缓冲区？
+对于上面的一大堆类看着都头疼，其实常用的也就那么一些，下面我给他们瘦个身；
+ByteBuf
+    AbstractByteBuf
+        AbstractReferenceCountedByteBuf
+            UnpooledHeapByteBuf
+            UnpooledDirectByteBuf
+            PooledByteBuf
+                PooledDirectByteBuf
+            CompositeByteBuf
+接下来主要就是分两个维度看：
+    是否采用内存池
+    是堆内存还是直接内存
+接下来看看channel有哪些内容呢？
+interface：
+    Channel（采用聚合的方式，将相关功能聚合在Channel类中）
+        ServerChannel
+            ServerSocketChannel
+                NioServerSocketChannel
+        AbstractChannel（DefaultChannelPipeline、DefaultChannelId）
+            AbstractNioChannel
+                AbstractNioMessageChannel
+                    NioServerSocketChannel
+            AbstractNioByteChannel
+                NioSocketChannel
+        DuplexChannel
+            SocketChannel
+                NioSocketChannel
+主要功能介绍
+    网络I/O操作
+        Channel read();
+        void write(Object var1, ChannelPromise var2);
+    其他
+        EventLoop eventLoop();
+        ChannelMetadata metadata();
+        Channel parent();
+        ChannelId id();
+ChannelPipeline
+ChannelHandler
+EventLoopGroup
+    NioEventLoopGroup
+EventLoop
+    NioEventLoop
+接下来看看util有哪些内容呢？
+interface:
+    Future
+        ChannelFuture
+        Promise
+            DefaultPromise

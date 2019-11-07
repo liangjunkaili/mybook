@@ -1,0 +1,7 @@
+String：char[]
+提问题：
+    string为什么是final的？
+        安全、效率
+    String、StringBuilder、StringBuffer的区别？
+        String是不可变的，StringBuilder、StringBuffer是可变的
+        字符串拼接String（a+b）是两个字符串，而后两个的append方法只会生成一个字符串，后两者区别是StringBuffer（synchronized）是线程安全的

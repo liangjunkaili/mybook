@@ -1,0 +1,11 @@
+buffer（java的八种基本类型：char（16）、byte（8）、short（16）、int（32）、long（64）、float（32）、double（64）、Boolean）
+    除了Boolean都有实现
+    小备注：1Byte=8bit；1KB=1024B（byte）；1MB=1024KB；
+    四个重要的概念：
+        mark
+        position
+        limit
+        capacity
+    最常用的是ByteBuffer
+channel
+selector：这个具体实现是依赖于操作系统的

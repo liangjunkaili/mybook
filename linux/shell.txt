@@ -1,0 +1,74 @@
+第一行必须为
+    #!/bin/sh
+1、if...then(要注意表达式中的空格是必须的)
+    if [ "$a" = "a" ]; then
+        //todo
+    fi
+    if [条件表达式]; then
+        //todo
+    else
+        //todo
+    fi
+    if [条件表达式]; then
+        //todo
+    elif [条件表达式]; then
+        //todo
+    else
+        //todo
+    fi
+2、case...esac
+    case $变量名称 in
+         "变量内容")
+           //todo
+           ;;
+         "变量内容")
+            //todo
+            ;;
+         *)
+         //todo
+            ;;
+    esac
+3、while do done
+    while [ "$a" = "a" ]
+    do
+        //todo
+    done
+4、until do done
+    until [ "$a" = "a" ]
+    do
+        //todo
+    done
+5、for...do...done
+    for var in con1 con2 con3 ...
+    do
+        //todo
+    done
+    数值处理
+    for (( i=0;i<10;i=i+1 ))
+    do
+        //todo
+    done
+shift：造成参数变量号码偏移
+test 命令
+    数值
+        -eq 	等于则为真
+        -ne 	不等于则为真
+        -gt 	大于则为真
+        -ge 	大于等于则为真
+        -lt 	小于则为真
+        -le 	小于等于则为真
+    字符串
+        = 	等于则为真
+        != 	不相等则为真
+        -z 字符串 	字符串的长度为零则为真
+        -n 字符串 	字符串的长度不为零则为真
+    文件
+        -e 文件名 	如果文件存在则为真
+        -r 文件名 	如果文件存在且可读则为真
+        -w 文件名 	如果文件存在且可写则为真
+        -x 文件名 	如果文件存在且可执行则为真
+        -s 文件名 	如果文件存在且至少有一个字符则为真
+        -d 文件名 	如果文件存在且为目录则为真
+        -f 文件名 	如果文件存在且为普通文件则为真
+        -c 文件名 	如果文件存在且为字符型特殊文件则为真
+        -b 文件名 	如果文件存在且为块特殊文件则为真
