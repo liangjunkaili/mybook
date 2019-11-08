@@ -1,0 +1,28 @@
+这篇我们来聊一聊java中的锁机制，这也是线程同步的必要操作。
+第一版
+    synchronized
+第二版（jdk1.5）
+    Lock（重入锁）
+        ReentrantLock(重入锁、公平性获取锁)
+    ReadWriteLock（读写锁）
+        ReentrantReadWriteLock
+            读写锁的设计、写锁的获取与释放、读锁的获取与释放、git锁降级
+    Condition（条件）
+    AbstractOwnableSynchronizer（同步器）
+        AbstractQueuedLongSynchronizer
+        AbstractQueuedSynchronizer
+    Semaphore
+    Phaser
+    CyclicBarrier
+    CountDownLatch
+第三版
+    CAS（无锁）
+    StampedLock
+下面我们就先详细聊一聊AbstractQueuedSynchronizer这个类，首先看一下官方的解释
+    提供一个框架，用于实现依赖先进先出（FIFO）等待队列的阻塞锁和相关同步器（信号量，事件等）。
+    该类被设计为大多数类型的同步器的有用依据，这些同步器依赖于单个原子int值来表示状态。
+    子类必须定义改变此状态的受保护方法，以及根据该对象被获取或释放来定义该状态的含义。
+    给定这些，这个类中的其他方法执行所有排队和阻塞机制。 子类可以保持其他状态字段，但只以原子方式更新int使用方法操纵值getState() ， setState(int)和compareAndSetState(int, int)被跟踪相对于同步。
+    子类应定义为非公共内部助手类，用于实现其封闭类的同步属性。 AbstractQueuedSynchronizer类不实现任何同步接口。
+    相反，它定义了一些方法，如acquireInterruptibly(int) ，可以通过具体的锁和相关同步器来调用适当履行其公共方法。
+独占模式和共享模式

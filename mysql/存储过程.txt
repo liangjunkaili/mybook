@@ -1,0 +1,17 @@
+下面是往一个表中插入10万数据的一个存储过程
+DELIMITER $$
+CREATE
+    PROCEDURE `pay`.`idata`()
+	BEGIN
+        DECLARE i INT;
+        SET i=1;
+        WHILE(i<=100000)
+        DO
+            INSERT INTO t VALUES(i, i, i);
+            SET i=i+1;
+        END
+        WHILE;
+	END$$
+DELIMITER ;
+
+调用存储过程：call idata();

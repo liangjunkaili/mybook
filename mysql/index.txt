@@ -24,3 +24,37 @@
     覆盖索引
     前缀索引
     索引下推
+优化器选择使用索引，为什么会错选索引呢？下面举个例子
+    CREATE TABLE `t` (
+      `id` int(11) NOT NULL,
+      `a` int(11) DEFAULT NULL,
+      `b` int(11) DEFAULT NULL,
+      PRIMARY KEY (`id`),
+      KEY `a` (`a`),
+      KEY `b` (`b`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+    EXPLAIN  SELECT * FROM t FORCE INDEX(a) WHERE a BETWEEN 10000 AND 20000;
+    EXPLAIN  SELECT * FROM t  WHERE a BETWEEN 10000 AND 20000;
+这留个问题，优化器的工作逻辑是什么？
+    判断标准：扫描行数、是否使用临时表、是否排序
+SHOW INDEX FROM t;看一个索引的基数
+analyze table t  修正统计信息
+索引选择异常的处理
+    FORCE INDEX(a)
+    修改语句，引导 MySQL 使用我们期望的索引
+    新建一个更合适的索引，来提供给优化器做选择，或删掉误用的索引。
+怎么给字符串加索引？（划重点！！！）
+    引出概念：前缀索引
+    他的优势是占用空间小，但可能会增加扫描的行数
+    注意：使用前缀索引，定义好长度，就可以做到既节省空间，又不用额外增加太多的查询成本。
+    a、当要给字符串创建前缀索引时，有什么方法能够确定我应该使用多长的前缀呢？
+        通过区分度，区分度越高，重复的键值越少
+        SELECT COUNT(DISTINCT email) AS L
+        FROM SUser;
+        SELECT   COUNT(DISTINCT LEFT(email,4))AS L4,  COUNT(DISTINCT LEFT(email,5))AS L5,
+            COUNT(DISTINCT LEFT(email,6))AS L6,  COUNT(DISTINCT LEFT(email,7))AS L7
+        FROM SUser;
+    前缀索引对覆盖索引的影响（导致覆盖索引失效）
+    优化方式（都不支持范围查询）
+        使用倒序存储
+        使用 hash 字段
