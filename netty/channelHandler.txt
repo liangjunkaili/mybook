@@ -1,0 +1,16 @@
+工作机制
+    与Servlet的Filter机制一致，将Channel的数据管道抽象为ChannelPipeline，消息在管道中流动
+    和传递，管道持有I/O事件拦截器ChannelHandler的链表
+我们看看io.netty.handler包下又有多少呢？
+    codec（编解码）
+    flow
+    flush
+    ipfilter
+    logging（日志打印，默认DEBUG）
+    proxy
+    ssl
+    stream
+    timeout
+    traffic
+所以在看ChannelHandler之前得先了解一下ChannelPipeline的工作原理
+    ChannelPipeline是ChannelHandler的编排管理容器，内部维护一个ChannelHandler的链表和迭代器。

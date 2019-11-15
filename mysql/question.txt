@@ -1,0 +1,3 @@
+在Linux下直接导出数据
+    mysql -h host -p port -u root -p password scheme -e "SQL语句" > 1.txt;
+    这样结果就被保存在1.TXT中了

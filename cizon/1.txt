@@ -1,0 +1,38 @@
+首先看看我们是如何在项目中使用的？
+    这里我用bookeventweb举例，涉及到一个文件start.sh（这里我们就不区分环境了）
+        里面就是导入了几个变量，并调用了cizon下bin的start.sh
+    下面是我在bookeventweb的测试环境cizon的bin下面的文件目录，就是启动和停止脚本，其中start.sh中，
+    给了一个项目启动文件的demo，以及调用了另一个文件xstart.sh，这个我们分开说一下，
+        第一个图中，其实就是校验我们之前设置的变量，为空的话就exit的；
+        第二个图中，是校验了一下那几个是不是目录，存不存在
+        第三个图中，就是组装整理启动参数、日志并启动（nohup），注意这里引出一个类com.qq.cizon.server.Main（后面将这个）
+    接下来在项目中，我们基本就是controller和service的一些编码了，实际上就是@Component、@Controller、@Request等一些注解的使用，
+    这里我们想一想，他们是怎么生效的呢？
+    好了，怎么使用的就说完了。
+那么下面就让我们看看cizon服务端是怎么工作的吧？
+    下图是服务端的代码目录，我们先大概了解下，有个大概的认识；
+    接下来的这个图，大家应该都比较熟悉吧，我们平常就是和他们打交道的；
+    再看下个图，我们挨个解释一下，
+        AppConfig（应用配置）
+        ApplicationContext、WebApplicationContext（上下文对象，加载类(反射)）
+    接下来的这个图中，是接收器、过滤器、处理器、会话、网络IO处理器等等
+    页面
+    服务端
+    系统页面
+    工具类
+begin...
+    启动进程Main.main();
+        加载类到容器中
+        启动HttpServer.start()
+    HttpServer.start()
+        Acceptor.bind():将ServerSocketChannel注册到selector，等待连接
+        Acceptor.listen():启动接收器，构造业务处理的线程池，构造网络IO的处理线程（并启动），监听套接字
+    Processor.start()
+        注册会话，监听进行相应的读写操作
+    几个线程类
+        Acceptor（接收器）
+        Processor（网络IO处理器）
+    要引出NIO编程模型
+当我们的一个请求到来时，怎么处理的呢？
+    看下图，我们在创建接收器的时候设置了过滤器和处理器，我们来看HttpHandler这个类，
+    通过URI在容器中得到对应的controller，通过反射进行处理，返回，结束。

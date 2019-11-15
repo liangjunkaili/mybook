@@ -1,0 +1,51 @@
+字面意思是引导、启动的意思吧。
+我们就从这个工具类开始，系统的组织一下netty的知识吧！
+AbstractBootstrap
+    Bootstrap
+    ServerBootstrap
+先看AbstractBootstrap这个类干了啥？
+    设置EventLoopGroup线程池（默认CPU内核数的2倍）
+    设置TCP参数
+        private final Map<ChannelOption<?>, Object> options = new LinkedHashMap();
+        public <T> B option(ChannelOption<T> option, T value){...}
+        主要的TCP参数
+            SO_TIMEOUT
+            SO_SNDBUF
+            SO_RCVBUF
+            SO_REUSEADDR
+            CONNECT_TIMEOUT_MILLIS
+            TCP_NODELAY
+    设置Channel
+        客户端：NIOSocketChannel
+        服务端：NioServerSocketChannel
+        private volatile ChannelFactory<? extends C> channelFactory;
+        public B channel(Class<? extends C> channelClass){}
+        注：通过反射机制创建Channel对象
+    设置ChannelHandler
+        private volatile ChannelHandler handler;
+        public B handler(ChannelHandler handler) {}
+        提供了ChannelInitializer
+    设置SocketAddress
+        private volatile SocketAddress localAddress;
+        public ChannelFuture bind() {}
+    设置AttributeKey
+        private final Map<AttributeKey<?>, Object> attrs = new LinkedHashMap();
+        public <T> B attr(AttributeKey<T> key, T value){}
+再看看Bootstrap这个类自己干了啥？
+    设置服务端地址
+        private volatile SocketAddress remoteAddress;
+    连接服务器
+        public ChannelFuture connect() {}
+最后看看ServerBootstrap这个类自己干了啥？
+    设置EventLoopGroup子线程池
+        private volatile EventLoopGroup childGroup;
+    设置child的TCP参数
+        private final Map<ChannelOption<?>, Object> childOptions = new LinkedHashMap();
+        public <T> ServerBootstrap childOption(ChannelOption<T> childOption, T value) {}
+    设置child的ChannelHandler
+        private volatile ChannelHandler childHandler;
+        public ServerBootstrap childHandler(ChannelHandler childHandler) {}
+        提供了ChannelInitializer
+    设置child的AttributeKey
+        private final Map<AttributeKey<?>, Object> childAttrs = new LinkedHashMap();
+        public <T> ServerBootstrap childAttr(AttributeKey<T> childKey, T value) {}
