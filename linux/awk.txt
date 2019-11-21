@@ -1,0 +1,10 @@
+awk '条件类型1{动作1} 条件类型2{动作2} ...' filename
+    说明：默认的字段分隔符为空白键或tab键
+
+例子
+    取出登录账户与IP，且以tab隔开
+        last -n 5 |awk '{print $1 "\t" $3}'
+    取出目标行的账号，目前处理的行数，该行有多少列
+        last -n 5 |awk '{print $1 "\t lines: " NR "\t columns: " NF}'
+    用：为分隔符，取出第三栏小于10的数据的第一栏和第三栏
+        cat /etc/passwd |awk 'BEGIN {FS=":"} $3<10 {print $1 "\t" $3}'
