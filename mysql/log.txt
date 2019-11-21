@@ -1,0 +1,10 @@
+几个重要的日志文件
+    binlog（归档日志）
+        有几种格式
+            statement
+            row
+    redolog（重做日志）--innodb引擎特有的
+一些涉及到的概念
+    两阶段提交
+    XID
+    WAL技术
