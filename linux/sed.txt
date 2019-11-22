@@ -1,0 +1,35 @@
+sed [-nefr] [n1,n2[动作]]
+    选项与参数：
+        -n：安静模式，仅显示被处理的行
+        -i：直接修改文件内容
+    动作：
+        a：新增
+        c：取代
+        d：删除
+        i：插入
+        p：打印
+        s：取代（直接进行）
+例子：
+    将文件的内容列出并打印行号，同时，将第2-5行删除
+        nl /etc/passwd | sed '2,5d'
+    只删除第2行：sed '2d'
+    删除2到最后一行：sed '2,$d'
+    在第二行后加上"drink tea"字符
+        nl /etc/passwd | sed '2a drink tea'
+    在第二行前加上"drink tea"字符
+        nl /etc/passwd | sed '2i drink tea'
+    增加多行
+        nl /etc/passwd | sed '2a drink tea...\
+        >adad'
+    将2-5行的内容取代为"NO 2-5 number"
+        nl /etc/passwd | sed '2,5c NO 2-5 number'
+    仅列出文件的第5-7行
+        nl /etc/passwd | sed -n '5,7p'
+    裁剪字符串（只显示IP）
+        ifconfig eth1 |grep 'inet ' |sed 's/^.*inet addr://g' |sed 's/  Bcast.*$//g'
+    处理掉#注释的行，空白的行
+        cat /etc/man.config | grep 'MAN' |sed 's/#.*$//g'|sed '/^$/d'
+    将文件每行结尾的.换成！
+        sed -i 's/\.$/\!/g' a.txt
+    在文件的最后一行加入字符
+        sed -i '$a # this is test ' a.txt
