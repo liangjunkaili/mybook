@@ -1,20 +1,17 @@
-      我们项目用到的字段
-        this.bootstrap.option(ChannelOption.SO_BACKLOG, 1024);
-        this.bootstrap.childOption(ChannelOption.TCP_NODELAY, true);
-        this.bootstrap.childOption(ChannelOption.SO_RCVBUF, 131072);
-        this.bootstrap.childOption(ChannelOption.SO_SNDBUF, 131072);
-
-
-        ChannelOption.SO_BACKLOG, 1024
+我们项目用到的字段
+    this.bootstrap.option(ChannelOption.SO_BACKLOG, 1024);
+    this.bootstrap.childOption(ChannelOption.TCP_NODELAY, true);
+    this.bootstrap.childOption(ChannelOption.SO_RCVBUF, 131072);
+    this.bootstrap.childOption(ChannelOption.SO_SNDBUF, 131072);
+    ChannelOption.SO_BACKLOG, 1024
        BACKLOG用于构造服务端套接字ServerSocket对象，标识当服务器请求处理线程全满时，
        用于临时存放已完成三次握手的请求的队列的最大长度。如果未设置或所设置的值小于1，Java将使用默认值50。
-
-        this.bootstrap.childOption(ChannelOption.TCP_NODELAY, true);使用场景
-        在有些网络通信的场景下，要求低延迟，
+    ChannelOption.TCP_NODELAY, true
+    使用场景：在有些网络通信的场景下，要求低延迟
         设置这样做好的好处就是禁用nagle算法
-        Nagle算法试图减少TCP包的数量和结构性开销, 将多个较小的包组合成较大的包进行发送.但这不是重点,
-        关键是这个算法受TCP延迟确认影响, 会导致相继两次向连接发送请求包,
-        读数据时会有一个最多达500毫秒的延时.
+    什么是Nagle算法？
+        Nagle算法试图减少TCP包的数量和结构性开销, 将多个较小的包组合成较大的包进行发送.但这不是重点,关键是
+        这个算法受TCP延迟确认影响, 会导致相继两次向连接发送请求包,读数据时会有一个最多达500毫秒的延时.
 
         TCP/IP协议中，无论发送多少数据，总是要在数据前面加上协议头，同时，对方接收到数据，也需要发送ACK表示确认。
         为了尽可能的利用网络带宽，TCP总是希望尽可能的发送足够大的数据。
@@ -22,39 +19,39 @@
 
         Nagle算法就是为了尽可能发送大块数据，避免网络中充斥着许多小数据块。
 
-        TCP/IP协议中针对TCP默认开启了Nagle算法。Nagle算法通过减少需要传输的数据包，来优化网络。在内核实现中，数据包的发送和接受会先做缓存，分别对应于写缓存和读缓存。
+        TCP/IP协议中针对TCP默认开启了Nagle算法。Nagle算法通过减少需要传输的数据包，来优化网络。
+        在内核实现中，数据包的发送和接受会先做缓存，分别对应于写缓存和读缓存。
 
-        启动TCP_NODELAY，就意味着禁用了Nagle算法，允许小包的发送。对于延时敏感型，同时数据传输量比较小的应用，开启TCP_NODELAY选项无疑是一个正确的选择。比如，对于SSH会话，用户在远程敲击键盘发出指令的速度相对于网络带宽能力来说，绝对不是在一个量级上的，所以数据传输非常少；而又要求用户的输入能够及时获得返回，有较低的延时。如果开启了Nagle算法，就很可能出现频繁的延时，导致用户体验极差。当然，你也可以选择在应用层进行buffer，比如使用java中的buffered stream，尽可能地将大包写入到内核的写缓存进行发送；vectored I/O（writev接口）也是个不错的选择。
-
+        启动TCP_NODELAY，就意味着禁用了Nagle算法，允许小包的发送。对于延时敏感型，同时数据传输量比较小的应用，
+        开启TCP_NODELAY选项无疑是一个正确的选择。比如，对于SSH会话，用户在远程敲击键盘发出指令的速度相对于网络带宽能力来说，
+        绝对不是在一个量级上的，所以数据传输非常少；而又要求用户的输入能够及时获得返回，有较低的延时。如果开启了Nagle算法，
+        就很可能出现频繁的延时，导致用户体验极差。当然，你也可以选择在应用层进行buffer，比如使用java中的buffered stream，
+        尽可能地将大包写入到内核的写缓存进行发送；vectored I/O（writev接口）也是个不错的选择。
 
         对于关闭TCP_NODELAY，则是应用了Nagle算法。数据只有在写缓存中累积到一定量之后，才会被发送出去，
         这样明显提高了网络利用率（实际传输数据payload与协议头的比例大大提高）。
         但是这又不可避免地增加了延时；与TCP delayed ack这个特性结合，这个问题会更加显著，延时基本在40ms左右。
-        当然这个问题只有在连续进行两次写操作的时候，才会暴露出来。
+        当然这个问题只有在连续进行两次写操作的时候，才会暴露出来。连续进行多次对小数据包的写操作，然后进行读操作，
+        本身就不是一个好的网络编程模式；在应用层就应该进行优化。
 
-        连续进行多次对小数据包的写操作，然后进行读操作，本身就不是一个好的网络编程模式；在应用层就应该进行优化。
+    ChannelOption.SO_RCVBUF, 131072
+    ChannelOption.SO_SNDBUF, 131072
+    SO_RCVBUF和SO_SNDBUF每个套接口都有一个发送缓冲区和一个接收缓冲区，使用这两个套接口选项可以改变缺省缓冲区大小。
 
+示例代码：
+    this.bootstrap.handler(new LoggingHandler(LogLevel.DEBUG));
+    this.bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
+        protected void initChannel(SocketChannel ch) throws Exception {
+            ChannelPipeline pip = ch.pipeline();
+            pip.addLast("NettyMessageDecoder", new MessageDecoder(builder.getMsgPool(), builder.isValidate()));
+            pip.addLast("NettyMessageEncoder", new MessageEncoder(builder.isValidate()));
+            pip.addLast("NettyMessageExecutor", new MessageExecutor(builder.getConsumer()));
+            Iterator i$ = builder.getExtraHandlers().iterator();
 
-        this.bootstrap.childOption(ChannelOption.SO_RCVBUF, 131072);
-        this.bootstrap.childOption(ChannelOption.SO_SNDBUF, 131072);
+            while(i$.hasNext()) {
+                ChannelHandler handler = (ChannelHandler)i$.next();
+                pip.addLast(new ChannelHandler[]{handler});
+            }
 
-        SO_RCVBUF和SO_SNDBUF每个套接口都有一个发送缓冲区和一个接收缓冲区，使用这两个套接口选项可以改变缺省缓冲区大小。
-
-
-
-        this.bootstrap.handler(new LoggingHandler(LogLevel.DEBUG));
-        this.bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
-                    protected void initChannel(SocketChannel ch) throws Exception {
-                        ChannelPipeline pip = ch.pipeline();
-                        pip.addLast("NettyMessageDecoder", new MessageDecoder(builder.getMsgPool(), builder.isValidate()));
-                        pip.addLast("NettyMessageEncoder", new MessageEncoder(builder.isValidate()));
-                        pip.addLast("NettyMessageExecutor", new MessageExecutor(builder.getConsumer()));
-                        Iterator i$ = builder.getExtraHandlers().iterator();
-
-                        while(i$.hasNext()) {
-                            ChannelHandler handler = (ChannelHandler)i$.next();
-                            pip.addLast(new ChannelHandler[]{handler});
-                        }
-
-                    }
-                });
+        }
+    });

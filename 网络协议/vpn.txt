@@ -1,0 +1,34 @@
+全名：Virtual Private Network，虚拟专用网
+    利用开放的公众网络，建立专用数据传输通道，将远程的分支机构、移动办公人员等连接起来。
+如何工作的？
+    VPN 通过隧道技术在公众网络上仿真一条点到点的专线，是通过利用一种协议来传输另外一种协议的技术
+    隧道技术、乘客协议、隧道协议、承载协议
+    IPsec？
+IPsec VPN（基于 IP 协议的安全隧道协议）
+    私密性（因特网密钥交换（IKE，Internet Key Exchange）协议）
+    完整性（hash、数据摘要）
+    真实性（身份认证）
+IPsec VPN 的协议簇
+    AH（Authentication Header）只能进行数据摘要
+    ESP（Encapsulating Security Payload），能够进行数据加密和数据摘要
+    两类算法：
+        加密算法
+        摘要算法
+    两大组件：
+        一个用于 VPN 的双方要进行对称密钥的交换的 IKE 组件
+        另一个是 VPN 的双方要对连接进行维护的 SA（Security Association）组件
+IPsec VPN 的建立过程
+    第一个阶段，建立 IKE 自己的 SA
+    第二个阶段，建立 IPsec SA
+        SPI（Security Parameter Index），用于标识不同的连接；
+        双方商量好的加密算法、哈希算法和封装模式；
+        生存周期，超过这个周期，就需要重新生成一个 IPsec SA，重新生成对称密钥。
+ATM
+多协议标签交换（MPLS，Multi-Protocol Label Switching）
+标签交换路由器（LSR，Label Switching Router）
+    FIB：路由表
+    LFIB：标签转发表
+在 MPLS VPN 中，网络中的路由器分成以下几类：
+    PE（Provider Edge）：运营商网络与客户网络相连的边缘网络设备；
+    CE（Customer Edge）：客户网络与 PE 相连接的边缘设备；
+    P（Provider）：这里特指运营商网络中除 PE 之外的其他运营商网络设备
