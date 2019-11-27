@@ -1,0 +1,39 @@
+1、Executor（execute）
+        |
+   ExecutorService（submit、shutdown、shutdownNow、invokeAny、invokeAll、awaitTermination、isShutdown、isTerminated）
+        |                                                       |
+   AbstractExecutorService                                  ScheduledExecutorService（schedule、scheduleAtFixedRate、scheduleWithFixedDelay）
+        |                           |                           |
+   ForkJoinPool             ThreadPoolExecutor                  |
+                                        |                       |
+                                        ScheduledThreadPoolExecutor
+
+
+2、Callable、 Runnable、      CompletionStage
+                |       Future           |
+                |         |              |                      |                                       |
+    RunnableFuture            CompletableFuture             ForkJoinTask                            ScheduledFuture
+            |                                         |          |                  |                   |
+    FutureTask                            CountedCompleter  RecursiveAction     RecursiveTask       RunnableScheduledFuture
+
+
+3、BlockingQueue
+        |               |               |                   |               |                           |                   |
+   BlockingDeque    TransferQueue   ArrayBlockingQueue    DelayQueue    LinkedBlockingQueue     PriorityBlockingQueue   SynchronousQueue
+        |               |
+        |           LinkedTransferQueue
+   LinkedBlockingDeque
+
+
+4、ConcurrentMap
+        |                   |
+   ConcurrentHashMap    ConcurrentNavigableMap
+                                |
+                        ConcurrentSkipListMap
+5、TimeUnit
+6、同步器
+    Semaphore
+    CountDownLatch
+    CyclicBarrier
+    Exchanger
+    Phaser

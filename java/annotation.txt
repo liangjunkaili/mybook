@@ -5,3 +5,27 @@
 	第三,如果只有一个参数成员,最好把参数名称设为"value",后加小括号.
 3.使用注解
 4.注解如何产生作用--注解处理器
+
+工作中遇到的一些注解：
+    org.springframework.context.annotation.DependsOn
+        该注解主要是标明依赖的bean，必须在这个bean之前加载到容器中
+    org.springframework.beans.factory.annotation.Value
+        读取配置文件中的配置
+    javax.annotation.PostConstruct
+        在注入该类之后执行的初始化方法，使用之前完成，和static代码块差不多
+接口：
+    org.springframework.boot.CommandLineRunner
+        spring boot 启动时加载数据
+    org.springframework.context.ApplicationContextAware
+        实现该接口，可以获得ApplicationContext上下文，从而可以获得想要的bean
+    org.springframework.beans.factory.DisposableBean
+        要在销毁时释放资源的bean实现的接口
+    java.lang.FunctionalInterface
+        加不加@FunctionalInterface对于接口是不是函数式接口没有影响，该注解知识提醒编译器去检查该接口是否仅包含一个抽象方法
+类：
+    java.util.concurrent.CountDownLatch
+    java.util.concurrent.CompletableFuture
+用法：
+    public volatile boolean shutdown = false;
+    while (!shutdown) {}
+    shutdown = true;
