@@ -1,0 +1,4 @@
+CAP定理：
+    一致性（Consistency）
+    可用性（Availability）
+    分区容忍（Partition tolerence）

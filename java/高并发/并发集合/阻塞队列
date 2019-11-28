@@ -1,0 +1,4 @@
+ArrayBlockingQueue：有界
+DelayQueue：延时、无界
+LinkedBlockingQueue：可指定大小，默认int最大值
+SynchronousQueue
