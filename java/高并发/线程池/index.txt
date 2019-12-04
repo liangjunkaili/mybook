@@ -1,0 +1,19 @@
+1、在共享主机下，对于同一个进程，对于线程池的个数创建问题？
+2、线程的多少和哪些因素有关？
+    内存（线程的数目）、cpu（活跃线程数）
+
+java中创建线程池，就不得不说这个类ThreadPoolExecutor，看看下面几个参数
+    int corePoolSize(核心线程的大小)
+    什么是核心线程？
+        就得看看另一个参数allowCoreThreadTimeOut（默认为false），就是说核心线程即使在
+        空闲时也要保持活动状态；如果设置为true，核心线程使用keepAliveTime来超时等待工作
+    什么时候创建？
+        仅在执行新任务时启动核心线程(默认策略)
+        public int prestartAllCoreThreads()：启动所有的核心线程
+        public boolean prestartCoreThread()：启动一个核心线程
+    int maximumPoolSize,
+    long keepAliveTime,
+    TimeUnit unit,
+    BlockingQueue<Runnable> workQueue,
+    ThreadFactory threadFactory,
+    RejectedExecutionHandler handler

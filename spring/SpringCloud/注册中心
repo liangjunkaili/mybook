@@ -1,0 +1,19 @@
+Eureka
+    server
+        1、引用eureka-server的pom文件
+        2、配置Eureka的相关配置
+        3、添加注解@EnableEurekaServer
+    client
+        1、引用eureka-client的pom文件
+        2、配置eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
+        3、添加注解@EnableEurekaClient
+    各个服务之间如何调用呢？
+        @Autowired
+        private RestTemplate restTemplate;
+
+        @Bean
+        public RestTemplate getRestTemplate(){
+            return new RestTemplate();
+        }
+
+        restTemplate.getForObject("http://localhost:8769/miya", String.class);
