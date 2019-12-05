@@ -1,7 +1,9 @@
 1、在共享主机下，对于同一个进程，对于线程池的个数创建问题？
 2、线程的多少和哪些因素有关？
     内存（线程的数目）、cpu（活跃线程数）
-
+3、线程池解决两个不同的问题：
+    由于每个任务的调用开销减少，它们通常在执行大量异步任务时提供改进的性能，
+    并且它们提供了一种限制和管理资源（包括执行一个任务。 每个ThreadPoolExecutor还维护一些基本统计信息，例如已完成任务的数量。
 java中创建线程池，就不得不说这个类ThreadPoolExecutor，看看下面几个参数
     int corePoolSize(核心线程的大小)
     什么是核心线程？
@@ -11,9 +13,26 @@ java中创建线程池，就不得不说这个类ThreadPoolExecutor，看看下�
         仅在执行新任务时启动核心线程(默认策略)
         public int prestartAllCoreThreads()：启动所有的核心线程
         public boolean prestartCoreThread()：启动一个核心线程
-    int maximumPoolSize,
-    long keepAliveTime,
-    TimeUnit unit,
-    BlockingQueue<Runnable> workQueue,
-    ThreadFactory threadFactory,
-    RejectedExecutionHandler handler
+    int maximumPoolSize（线程池的最大值）
+    long keepAliveTime（）
+        当线程池中的线程超过核心线程数时，这些空闲线程中等待工作的超时时间
+    TimeUnit unit（keepAliveTime参数的单位时间）
+    BlockingQueue<Runnable> workQueue（线程队列）
+        当线程数达到coreSize时，新来的task就会被放到队列中排队
+    ThreadFactory threadFactory（线程工厂）
+        用来创建新的线程，使用该方法addWorker（默认Executors.defaultThreadFactory()）
+    RejectedExecutionHandler handler（拒绝策略）
+        在线程池饱和（线程数达到最大值，等待队列也满了）或者关闭时调用
+整个的执行流程：
+    一个新的任务被提交，
+        如果线程数小于coreSize，则会new一个（即使有空闲线程）；
+        如果大于coreSize并且小于max，则入队列；
+        当队列满了，并且线程数小于max，new一个；
+        当队列满了，并且线程数大于max，执行拒绝策略。
+Executors里几种工厂方法
+    Executors.newCachedThreadPool()
+        max为Integer.MAX_VALUE，风险是容易造成线程过多的内存溢出
+    Executors.newFixedThreadPool(int)
+        队列为LinkedBlockingQueue<Runnable>()，由于是无限队列，容易造成排队过多的内存溢出
+    Executors.newSingleThreadExecutor()
+        coreSize和max都为1
