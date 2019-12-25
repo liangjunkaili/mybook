@@ -1,0 +1,58 @@
+内存使用统计指标
+    redis分配器分配的内存总量
+    从操作系统的角度占用的物理内存总量
+    内存使用的最大值
+    Lua引擎消耗的内存
+    内存碎片率
+    内存分配器
+首先看看有哪些内存消耗？
+    自身内存
+    缓冲内存
+    内存碎片
+    对象内存（最大头）
+怎么计算对象内存的消耗？
+    sizeof（keys）+sizeof（values）
+    主要是string、hash、list、set、zset五种基本数据类型
+    先看看RedisObject这个结构体是何方神圣？
+    内部结构
+        type：4字节
+        encoding：4字节
+        lru
+        refcount
+        *ptr
+    不管什么类型都是以字符串的结构存储的，所以下面看看redis特有的SDS的结构
+        int len：4字节
+        int free：4字节
+        char buf[]
+        \0:1字节（结束标志）
+关于内存碎片的几个问题：
+    为什么会产生？
+    怎么预防？
+        数据对齐
+    怎么处理？
+        安全重启，采用高可用架构（Sentinel或Cluster）
+type和encoding的对应关系
+string  raw
+        embstr
+        int
+hash    hashtable
+        ziplist
+list    linkedlist
+        ziplist
+        quicklist（3.2新增）
+set     hashtable
+        intset
+zset    skiplist
+        ziplist
+从上面可以看出共有9种内部编码，下面我们挨个看看这些内部编码的结构
+    ziplist：4+4+2+1+length（具体的节点）
+
+
+关于存储架构的重构？
+    是否还继续采用redis？
+    如果采用，换集群的话，能够提供什么样的能力？
+    DCache
+
+问题：
+    本身对存储的能力没有直观的认识
+    对于活动的用户量的预估，对于增量数据的处理方案
