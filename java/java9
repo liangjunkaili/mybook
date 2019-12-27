@@ -1,0 +1,16 @@
+发布时间 2017 年 9 月 21 日
+新特性：
+    Java 平台 模块系统（ Project Jigsaw），jlink工具
+    JShell工具
+    集合（在集合上，Java 9 增加 了 List.of()、Set.of()、Map.of() 和 M ap.ofEntries()等工厂方法来创建不可变集合 ）
+    Stream（增加了新的方法 ofNullable、dropWhile、takeWhile 和 iterate）
+    Optional（新增了 ifPresentOrElse、or 和 stream 等方法）
+    进程 API（增加了 ProcessHandle 接口）
+    平台日志 API 和 服务
+    反应式流 （ Reactive Streams ）
+    变量句柄
+    改进方法句柄（Method Handle）
+    在并发方面，类 CompletableFuture 中增加了几个新的方法
+    Nashorn
+    I/O 流新特性（类 java.io.InputStream 中增加了新的方法来读取和复制 InputStream 中包含的数据。）
+    改进应用安全性能（新增了 4 个 SHA- 3 哈希算法，SHA3-224、SHA3-256、SHA3-384 和 S HA3-512）
