@@ -1,0 +1,17 @@
+parallel scavenge收集器（jdk1.8默认）
+    新生代收集器
+    使用复制算法
+    并行的多线程收集器
+目标：
+    达到一个可控制的吞吐量（throughput），throughput=运行用户代码时间/（运行用户代码时间+垃圾收集时间）
+优势：
+    高效率的利用CPU时间
+场景：
+    适合在后台运算而不需要太多交互的任务
+参数：
+    最大垃圾收集停顿时间：-XX:MaxGCPauseMillis，>0的毫秒值
+    吞吐量的大小：-XX:GCTimeRadio，大于0且小于100的整数，默认99
+    -XX:+UseAdaptiveSizePolicy，GC自适应的调节策略的开关
+parallel old收集器
+    老年代
+    标记-整理算法

@@ -1,0 +1,7 @@
+java -XX:+PrintCommandLineFlags -version
+-XX:InitialHeapSize=260959616 -XX:MaxHeapSize=4175353856 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC
+java version "1.8.0_211"
+Java(TM) SE Runtime Environment (build 1.8.0_211-b12)
+Java HotSpot(TM) 64-Bit Server VM (build 25.211-b12, mixed mode)
+默认的垃圾回收器：UseParallelGC，并行收集器
+    开启此参数使用parallel scavenge & parallel old收集器
