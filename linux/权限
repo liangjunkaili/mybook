@@ -1,0 +1,37 @@
+有哪些用户？
+    root
+有哪几种类型？
+UID和GID
+
+/etc/passwd
+    root:x:0:0:root:/root:/bin/bash
+    tomcat:x:500:500::/home/tomcat:/bin/bash
+说明：以:为分隔符共7列
+    账号名称
+    密码：放到了/etc/shadow中
+    UID：0（系统管理员）
+    GID：具体看/etc/group文件
+    使用者信息说明栏：
+    主文件夹
+    Shell
+/etc/group
+    root:x:0:
+    tomcat:x:500:
+说明：以:为分隔符共4列
+    群组名称
+    群组密码
+    GID：/etc/gshadow
+    此群组支持的账号名称
+/etc/shadow
+    root:$1$1sL2kk5i$CrgbJYIqaSqt6.GCsNZgT1:18056:0:99999:7:::
+    tomcat:$1$TDzcQxqm$Mpw6CHZIz957mF82BROjn.:18148:0:99999:7:::
+说明：以:为分隔符共9列
+    账号名称
+    密码：加密过的密码
+    最近更新密码的日期：以1970年1月1日作为1累加的日期
+    密码不可被更改的天数：0表示没有限制
+    密码需要重新变更的天数：99999表示没有限制
+    密码需要变更期限前的警告天数
+    密码过期后的账号宽限时间
+    账号失效日期
+    保留

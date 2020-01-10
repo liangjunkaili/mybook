@@ -1,0 +1,21 @@
+server
+    1、配置pom文件spring-cloud-config-server
+    2、配置
+      spring.cloud.config.server.git.uri=https://github.com/liangjunkaili/springCloud/
+      spring.cloud.config.server.git.search-paths=
+      spring.cloud.config.label=master
+      spring.cloud.config.server.git.username=m18550442795@163.com
+      spring.cloud.config.server.git.password=liangjun123...
+    3、添加注解@EnableConfigServer
+    4、需要借助MQ队列，待完善。。。
+client
+    1、配置pom文件spring-cloud-starter-config
+    2、配置
+        spring.cloud.config.uri=http://localhost:8888/
+        spring.cloud.config.label=master
+        spring.cloud.config.profile=dev
+        spring.cloud.config.discovery.enabled=true
+        spring.cloud.config.discovery.serviceId=config-server
+    3、添加注解
+        @EnableDiscoveryClient
+        @RefreshScope
