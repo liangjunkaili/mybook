@@ -1,0 +1,92 @@
+SpringApplication--
+    SERVLET
+    org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext
+    org.springframework.web.context.support.StandardServletEnvironment
+1、run(args)
+    获取监听器org.springframework.boot.SpringApplicationRunListener集合（META-INF/spring.factories），并启动
+    SpringApplicationRunListeners listeners = this.getRunListeners(args);
+    listeners.starting();
+    将args转为ApplicationArguments
+    ApplicationArguments applicationArguments = new DefaultApplicationArguments(args);
+    获取或者新建应用的环境，配置properties和activeProfile等
+    ConfigurableEnvironment environment = this.prepareEnvironment(listeners, applicationArguments);
+    创建应用上下文
+    context = this.createApplicationContext();
+    获取应用异常上报的bean
+    exceptionReporters = this.getSpringFactoriesInstances(SpringBootExceptionReporter.class,
+        new Class[]{ConfigurableApplicationContext.class}, context);
+    准备上下文
+    this.prepareContext(context, environment, listeners, applicationArguments, printedBanner);
+        给上下文设置环境
+        context.setEnvironment(environment);
+        给上下文设置beanNameGenerator、resourceLoader、setClassLoader、addConversionService
+        this.postProcessApplicationContext(context);
+        初始化操作org.springframework.context.ApplicationContextInitializer
+        this.applyInitializers(context);
+        给监听器设置上下文
+        listeners.contextPrepared(context);
+        处理延迟初始化
+        if (this.lazyInitialization) {
+            context.addBeanFactoryPostProcessor(new LazyInitializationBeanFactoryPostProcessor());
+        }
+        得到应用的主类
+        Set<Object> sources = this.getAllSources();
+        加载资源到应用上下文
+        this.load(context, sources.toArray(new Object[0]));
+        加载监听器到上下文
+        listeners.contextLoaded(context);
+    启动上下文
+    this.refreshContext(context);
+        -->AbstractApplicationContext.refresh()
+            this.prepareRefresh();注意：这里的类型是ApplicationListener
+                初始化properties，由实现类实现
+                this.initPropertySources();
+                校验必须的配置
+                this.getEnvironment().validateRequiredProperties();
+            获得上下文对应的beanFactory
+            ConfigurableListableBeanFactory beanFactory = this.obtainFreshBeanFactory();
+            给beanFactory配置信息
+            this.prepareBeanFactory(beanFactory);
+            扫描class，并注册
+            this.postProcessBeanFactory(beanFactory);
+            调用已经添加的BeanFactoryPostProcessor
+            this.invokeBeanFactoryPostProcessors(beanFactory);
+            注册BeanFactoryPostProcessor到beanFactory？
+            this.registerBeanPostProcessors(beanFactory);
+            初始化messageSource
+            this.initMessageSource();
+            初始化SimpleApplicationEventMulticaster（默认）
+            this.initApplicationEventMulticaster();
+            启动上下文
+            this.onRefresh();
+                创建web容器，默认是tomcat
+                this.createWebServer();
+            注册监听器
+            this.registerListeners();
+            完成beanFactory的初始化
+            this.finishBeanFactoryInitialization(beanFactory);
+            启动完成
+            this.finishRefresh();
+                清除资源缓存
+                this.clearResourceCaches();
+                初始化生命周期处理器
+                this.initLifecycleProcessor();
+                调用处理器
+                this.getLifecycleProcessor().onRefresh();
+                发布上下文启动的事件
+                this.publishEvent((ApplicationEvent)(new ContextRefreshedEvent(this)));
+                LiveBeansView.registerApplicationContext(this);
+            销毁bean
+            this.destroyBeans();
+            取消启动
+            this.cancelRefresh(var9);
+            清除缓存
+            this.resetCommonCaches();
+    启动后的操作，暂无实现
+    this.afterRefresh(context, applicationArguments);
+    运行监听器started
+    listeners.started(context);
+    执行org.springframework.boot.ApplicationRunner、org.springframework.boot.CommandLineRunner的方法
+    this.callRunners(context, applicationArguments);
+    运行监听器running
+    listeners.running(context);

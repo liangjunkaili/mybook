@@ -1,0 +1,45 @@
+1、@SpringBootApplication
+    组合注解，组合了下面的2/3/4；
+    里面属性的含义
+    exclude：class数组，对应EnableAutoConfiguration中的exclude
+    excludeName：String数组，对应EnableAutoConfiguration中的excludeName
+    scanBasePackages：String数组，对应ComponentScan中的basePackages
+    scanBasePackageClasses：class数组，对应ComponentScan中的basePackageClasses
+    proxyBeanMethods：Boolean类型，对应Configuration中的proxyBeanMethods
+    排除了org.springframework.boot.context.TypeExcludeFilter、
+          org.springframework.boot.autoconfigure.AutoConfigurationExcludeFilter
+2、@SpringBootConfiguration
+    组合了下面的6；
+    proxyBeanMethods：Boolean类型，对应Configuration中的proxyBeanMethods
+3、@EnableAutoConfiguration
+    组合了9/10；
+    引入org.springframework.boot.autoconfigure.AutoConfigurationImportSelector
+    String ENABLED_OVERRIDE_PROPERTY = "spring.boot.enableautoconfiguration";
+    exclude
+    excludeName
+4、@ComponentScan
+    value：String[]，扫描的包路径，默认为空
+    basePackages：同value
+    basePackageClasses：Class<?>[]，扫描的基础包的类，默认为空
+    nameGenerator：beanName生成器，默认org.springframework.beans.factory.support.BeanNameGenerator
+    scopeResolver：默认org.springframework.context.annotation.AnnotationScopeMetadataResolver
+    scopedProxy：默认org.springframework.context.annotation.ScopedProxyMode.DEFAULT
+    resourcePattern：默认"**/*.class"
+    useDefaultFilters：默认true
+    includeFilters：包含的过滤器，默认为空
+    excludeFilters：排除的过滤器，默认为空
+    lazyInit：是否延迟初始化，默认false
+5、@AliasFor
+    个人理解就是别名引用
+6、@Configuration
+    组合了下面的7；
+    value：String类型，对应Component的value
+    proxyBeanMethods：默认是true
+7、@Component
+    组合了下面的8；
+8、@Indexed
+9、@AutoConfigurationPackage
+    组合了10；
+    引入org.springframework.boot.autoconfigure.AutoConfigurationPackages.Registrar
+10、@Import
+    value：class数组，需要被引入的class集合

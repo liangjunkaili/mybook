@@ -1,0 +1,21 @@
+run方法第一次启动时立即调用，ApplicationStartingEvent
+default void starting() {
+}
+环境准备好后，上下文创建前，ApplicationEnvironmentPreparedEvent
+default void environmentPrepared(ConfigurableEnvironment environment) {
+}
+上下文创建并准备好后，资源加载前，ApplicationContextInitializedEvent
+default void contextPrepared(ConfigurableApplicationContext context) {
+}
+上下文加载后、启动前，ApplicationPreparedEvent
+default void contextLoaded(ConfigurableApplicationContext context) {
+}
+上下文启动、应用启动后，CommandLineRunners and ApplicationRunners 被调用前，ApplicationStartedEvent
+default void started(ConfigurableApplicationContext context) {
+}
+上下文启动后并且 CommandLineRunners and ApplicationRunners 被调用后，在run方法结束前，ApplicationReadyEvent
+default void running(ConfigurableApplicationContext context) {
+}
+在运行应用程序时发生故障时调用
+default void failed(ConfigurableApplicationContext context, Throwable exception) {
+}
