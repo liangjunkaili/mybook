@@ -1,0 +1,8 @@
+org.springframework.web.reactive.DispatcherHandler
+org.springframework.web.servlet.DispatcherServlet
+org.glassfish.jersey.servlet.ServletContainer
+以上三个仅存在DispatcherHandler时，为REACTIVE类型
+javax.servlet.Servlet
+org.springframework.web.context.ConfigurableWebApplicationContext
+以上两个只要有一个没有，就是NONE
+其余都为SERVLET

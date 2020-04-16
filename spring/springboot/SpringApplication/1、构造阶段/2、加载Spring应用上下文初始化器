@@ -1,0 +1,14 @@
+在META-INF/spring.factories文件中找到以下配置
+# Application Context Initializers
+org.springframework.context.ApplicationContextInitializer=\
+org.springframework.boot.context.ConfigurationWarningsApplicationContextInitializer,\
+org.springframework.boot.context.ContextIdApplicationContextInitializer,\
+org.springframework.boot.context.config.DelegatingApplicationContextInitializer,\
+org.springframework.boot.rsocket.context.RSocketPortInfoApplicationContextInitializer,\
+org.springframework.boot.web.context.ServerPortInfoApplicationContextInitializer
+
+通过Spring的工厂机制获取初始化器的名单；
+通过反射机制初始化这些类；
+进行排序。
+
+由于setInitializers为public，所有有被覆盖的可能

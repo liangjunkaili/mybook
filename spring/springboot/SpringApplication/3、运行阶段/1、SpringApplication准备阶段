@@ -1,0 +1,28 @@
+ApplicationContext启动的前一阶段：
+    即从application.run(args)方法调用开始，到this.refreshContext(context)调用前
+1、理解SpringApplicationRunListeners
+    组合模式的实现，内部关联了List<SpringApplicationRunListener>
+2、理解SpringApplicationRunListener
+    理解其生命周期
+    starting---Spring应用刚启动
+    environmentPrepared---ConfigurableEnvironment准备就绪
+    contextPrepared---ConfigurableApplicationContext准备就绪
+    contextLoaded---ConfigurableApplicationContext已装载，但仍未启动
+    started---ConfigurableApplicationContext已启动，此时Spring Bean已初始化完成
+    running---Spring应用正在运行
+    failed---Spring应用运行失败
+    根据Spring工厂机制从META-INF/spring.factories文件中找到以下配置
+    # Run Listeners
+    org.springframework.boot.SpringApplicationRunListener=\
+    org.springframework.boot.context.event.EventPublishingRunListener
+3、Spring boot的事件
+    ApplicationStartingEvent
+    ApplicationEnvironmentPreparedEvent
+    ApplicationContextInitializedEvent
+    ApplicationPreparedEvent
+    ApplicationStartedEvent
+    ApplicationReadyEvent
+    ApplicationFailedEvent
+4、Spring事件、监听机制
+    监听
+    发布：SimpleApplicationEventMulticaster、ConfigurableApplicationContext
