@@ -19,7 +19,7 @@
     git tag 查看所有标签
     git tag name <commit_id>打标签（commit_id可以不写）
     git tag -d name 删除标签
-    git push origin --tags git push origin --tags
+    git push origin tagName
 获取git仓库？
     1、现在git上创建远程库，然后git clone url
     2、将本地以及有的项目上传到远程仓库，在目录中执行
