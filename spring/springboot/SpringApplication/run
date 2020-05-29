@@ -1,0 +1,88 @@
+SpringApplication的核心方法run(String... args)
+去掉耗时统计、异常上报、banner的非主要代码，以下就是run的大概流程了
+    1、配置java.awt.headless
+    this.configureHeadlessProperty();
+    2、获取SpringApplicationRunListener，并执行starting()
+    SpringApplicationRunListeners listeners = this.getRunListeners(args);
+    listeners.starting();
+    3、创建应用参数
+    ApplicationArguments applicationArguments = new DefaultApplicationArguments(args);
+    4、创建并配置environment
+    ConfigurableEnvironment environment = this.prepareEnvironment(listeners, applicationArguments);
+    5、配置spring.beaninfo.ignore
+    this.configureIgnoreBeanInfo(environment);
+    6、创建应用上下文
+    context = this.createApplicationContext();
+    7、准备上下文****
+    this.prepareContext(context, environment, listeners, applicationArguments, printedBanner);
+    8.启动容器****
+    this.refreshContext(context);
+    9、容器启动后的处理，目前为空实现
+    this.afterRefresh(context, applicationArguments);
+    10、执行获取SpringApplicationRunListener的started()方法
+    listeners.started(context);
+    11、执行ApplicationRunner和CommandLineRunner的实现类的方法
+    this.callRunners(context, applicationArguments);
+    12、执行获取SpringApplicationRunListener的running()方法
+    listeners.running(context);
+下面继续看看this.prepareContext(context, environment, listeners, applicationArguments, printedBanner);
+    1、给上下文设置environment
+    context.setEnvironment(environment);
+    2、给上下文的BeanFactory设置beanNameGenerator、setConversionService、给上下文设置resourceLoader
+    this.postProcessApplicationContext(context);
+    3、执行ApplicationContextInitializer的initialize方法
+    this.applyInitializers(context);
+    4、执行获取SpringApplicationRunListener的contextPrepared()方法
+    listeners.contextPrepared(context);
+    5、获取上下文的beanFactory，并注册springApplicationArguments、springBootBanner
+    ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
+    beanFactory.registerSingleton("springApplicationArguments", applicationArguments);
+    if (printedBanner != null) {
+        beanFactory.registerSingleton("springBootBanner", printedBanner);
+    }
+    6、如果beanFactory是DefaultListableBeanFactory，设置setAllowBeanDefinitionOverriding
+    if (beanFactory instanceof DefaultListableBeanFactory) {
+        ((DefaultListableBeanFactory)beanFactory).setAllowBeanDefinitionOverriding(this.allowBeanDefinitionOverriding);
+    }
+    7、默认是false，如果是延迟初始化，给上下文添加LazyInitializationBeanFactoryPostProcessor
+    if (this.lazyInitialization) {
+        context.addBeanFactoryPostProcessor(new LazyInitializationBeanFactoryPostProcessor());
+    }
+    8、获取所有的资源，默认只有主类
+    Set<Object> sources = this.getAllSources();
+    9、加载资源到上下文，具体逻辑另外分析TODO
+    this.load(context, sources.toArray(new Object[0]));
+    10、执行获取SpringApplicationRunListener的contextLoaded()方法
+    listeners.contextLoaded(context);
+启动流程看AbstractApplicationContext#refresh()方法
+    1、启动前准备
+    this.prepareRefresh();
+    2、得到BeanFactory
+    ConfigurableListableBeanFactory beanFactory = this.obtainFreshBeanFactory();
+    3、配置beanFactory
+    this.prepareBeanFactory(beanFactory);
+    4、执行AnnotationConfigServletWebServerApplicationContext#postProcessBeanFactory、ServletWebServerApplicationContext#postProcessBeanFactory
+    this.postProcessBeanFactory(beanFactory);
+    5、调用PostProcessorRegistrationDelegate#invokeBeanFactoryPostProcessors，执行BeanFactoryPostProcessor
+    this.invokeBeanFactoryPostProcessors(beanFactory);
+    6、调用PostProcessorRegistrationDelegate#registerBeanPostProcessors
+    this.registerBeanPostProcessors(beanFactory);
+    7、初始化MessageSource
+    this.initMessageSource();
+    8、初始化ApplicationEventMulticaster，默认SimpleApplicationEventMulticaster
+    this.initApplicationEventMulticaster();
+    9、执行ServletWebServerApplicationContext#onRefresh，创建WebServer
+    this.onRefresh();
+    10、注册ApplicationListener到ApplicationEventMulticaster，并multicastEvent
+    this.registerListeners();
+    11、beanFactory初始化结束
+    this.finishBeanFactoryInitialization(beanFactory);
+    12、启动完成，清除ResourceCache，初始化LifecycleProcessor并启动Bean，发布ContextRefreshedEvent
+    this.finishRefresh();
+    13、销毁bean
+    this.destroyBeans();
+    14、取消启动
+    this.cancelRefresh(var9);
+    15、清除一些cache
+    this.resetCommonCaches();
+

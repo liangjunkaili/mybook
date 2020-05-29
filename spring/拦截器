@@ -1,0 +1,2 @@
+1、继承HandlerInterceptorAdapter类，覆盖方法
+2、在配置类实现WebMvcConfigurer接口，并在addInterceptors方法中添加自定义的拦截器

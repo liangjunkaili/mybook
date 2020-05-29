@@ -1,0 +1,11 @@
+spring事件：ApplicationEvent
+spring事件监听器：ApplicationListener
+spring事件广播器：ApplicationEventPublisher
+
+只需要自定义ApplicationListener就可以了
+方式有两种
+1、实现ApplicationListener接口
+    只能监听ApplicationEvent的事件
+2、在方法上标注@EventListener注解
+    可以监听任意对象
+通过应用上下文（ApplicationContext）发布事件即可

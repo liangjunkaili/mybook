@@ -1,0 +1,53 @@
+ApplicationContext
+    扩展了BeanFactory一些方法
+    EnvironmentCapable
+    MessageSource
+    ApplicationEventPublisher
+    ResourcePatternResolver
+第一步先看相关的接口interface
+ApplicationContext：带有扩展功能的BeanFactory
+    ConfigurableApplicationContext：新增一些可配置的方法
+    WebApplicationContext：可以获取ServletContext
+        ConfigurableWebApplicationContext：设置ServletContext、ServletConfig、Namespace、ConfigLocations
+    WebServerApplicationContext：可以获取WebServer、serverNamespace
+        ConfigurableWebServerApplicationContext：设置serverNamespace
+    ReactiveWebApplicationContext
+        ConfigurableReactiveWebApplicationContext
+第二步再看相关接口的实现之抽象类abstract class
+ConfigurableApplicationContext（接口）
+    AbstractApplicationContext:实现了ConfigurableApplicationContext的方法
+        AbstractRefreshableApplicationContext：实现了AbstractApplicationContext中的refreshBeanFactory()、closeBeanFactory()、getBeanFactory()
+            AbstractRefreshableConfigApplicationContext：实现了ConfigurableWebApplicationContext中的setConfigLocation、setConfigLocations
+                AbstractRefreshableWebApplicationContext
+                AbstractXmlApplicationContext实现了AbstractRefreshableApplicationContext中的loadBeanDefinitions(DefaultListableBeanFactory var1)
+第三步看看有哪些WebApplicationType
+    NONE,
+    SERVLET,
+    REACTIVE;
+第四步最后看看各种场景具体的实现类class
+注解的NONE项目
+    AnnotationConfigApplicationContext
+注解的SERVLET项目--springBoot默认
+    AnnotationConfigServletWebServerApplicationContext
+注解的REACTIVE项目
+    AnnotationConfigReactiveWebServerApplicationContext
+xml配置项目
+    ClassPathXmlApplicationContext
+    FileSystemXmlApplicationContext
+xml配置的web项目
+    XmlWebApplicationContext
+    XmlServletWebServerApplicationContext
+静态web？
+    StaticWebApplicationContext
+other
+    AnnotationConfigWebApplicationContext
+    AnnotationConfigServletWebApplicationContext
+    AnnotationConfigReactiveWebApplicationContext
+最后来看下AnnotationConfigServletWebServerApplicationContext的工作流程
+    介绍几个成员变量
+    AnnotatedBeanDefinitionReader#register()
+    ClassPathBeanDefinitionScanner#scan()
+    Set<Class<?>> annotatedClasses
+    String[] basePackages
+    1.设置Environment
+        StandardServletEnvironment

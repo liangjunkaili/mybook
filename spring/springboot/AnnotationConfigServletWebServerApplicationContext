@@ -1,0 +1,19 @@
+继承关系
+AnnotationConfigServletWebServerApplicationContext
+    ServletWebServerApplicationContext
+        GenericWebApplicationContext
+            GenericApplicationContext
+                AbstractApplicationContext
+                    ConfigurableApplicationContext
+                        ApplicationContext
+            ConfigurableWebApplicationContext
+                WebApplicationContext
+                    ApplicationContext
+                ConfigurableApplicationContext
+                    ApplicationContext
+        ConfigurableWebServerApplicationContext
+            ConfigurableApplicationContext
+                ApplicationContext
+            WebServerApplicationContext
+                ApplicationContext
+    AnnotationConfigRegistry（register、scan）
