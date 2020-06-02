@@ -1,0 +1,32 @@
+顾名思义就是bean的定义，告诉我们一个bean是如何在spring中被定义的
+里面有些什么呢？
+    两种作用域（scope）：singleton和prototype
+    三种角色（role）：application、support、infrastructure
+    parentName
+    beanClassMame
+    scope
+    lazyInit
+    dependsOn
+    autoWireCandidate
+    primary
+    factoryBeanName
+    factoryMethodName
+    constructorArgumentValues
+    propertyValues
+    initMethodName
+    destroyMethodName
+    role
+    description
+    resolvableType
+    isAbstract
+    resourceDescription
+    originatingBeanDefinition
+子接口：AnnotatedBeanDefinition
+    metadata
+    factoryMethodMetadata
+抽象类：AbstractBeanDefinition（大部分实现在这个类中）
+实现类：
+    GenericBeanDefinition
+        AnnotatedGenericBeanDefinition
+
+定义好之后如何注册呢？
