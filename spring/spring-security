@@ -1,0 +1,8 @@
+1、引入pom
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+2、配置properties
+    spring.security.user.name=liangjun
+    spring.security.user.password=liangjun
