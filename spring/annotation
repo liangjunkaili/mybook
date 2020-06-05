@@ -1,0 +1,5 @@
+AutowiredAnnotationBeanPostProcessor
+    @Autowired
+    @Value
+CommonAnnotationBeanPostProcessor
+    @Resource

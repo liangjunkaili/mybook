@@ -1,0 +1,39 @@
+1、配置pom
+    <dependency>
+        <groupId>io.springfox</groupId>
+        <artifactId>springfox-swagger2</artifactId>
+        <version>2.7.0</version>
+    </dependency>
+    <dependency>
+        <groupId>io.springfox</groupId>
+        <artifactId>springfox-swagger-ui</artifactId>
+        <version>2.7.0</version>
+    </dependency>
+2、新增SwaggerConfiguration配置类
+    @EnableSwagger2
+    @Configuration
+    public class SwaggerConfiguration {
+        @Bean
+        public Docket docket(){
+            Docket docket = new Docket(DocumentationType.SWAGGER_2);
+            ApiInfo apiInfo = new ApiInfoBuilder()
+                    .description("这里是描述信息")
+                    .title("这里是标题")
+                    .version("这里是版本")
+                    .termsOfServiceUrl("服务地址的术语")
+                    .build();
+            docket.enable(true)
+                    .apiInfo(apiInfo)
+                    .host("127.0.0.1")
+                    .select().apis(RequestHandlerSelectors.basePackage("com.jiatong.thirdpartyshop.controller"))
+                    .paths(PathSelectors.any()).build();
+            return docket;
+        }
+    }
+3、使用swagger
+    类上@Api(value = "用户相关接口", tags = {"用户相关接口"})
+    方法上
+        @ApiOperation(value = "更新用户信息", notes = "...")
+        @ApiImplicitParams({
+              @ApiImplicitParam(name = "id", value = "用户ID", required = true, defaultValue = "782178504", dataType = "long", paramType = "header")
+        })
