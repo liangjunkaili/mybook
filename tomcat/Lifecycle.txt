@@ -1,12 +1,57 @@
 关于tomcat的生命周期，在这系统的聊一下
 统一接口----Lifecycle
-相关接口：LifecycleListener/LifecycleEvent/LifecycleState
+相关接口：LifecycleListener/LifecycleEvent/LifecycleState/Container
+涉及到的类：
+    LifecycleState：状态枚举
+    LifecycleListener：监听器
+    LifecycleEvent：事件
+    Container：各类容器
+        四种事件：addChild、addValve、removeChild、removeValve
+        Pipeline getPipeline();
+        Cluster getCluster();
+        Realm getRealm();
+        四种容器：Engine、Host、Context、Wrapper
+        一个抽象类：ContainerBase，实现了大部分方法
+            HashMap<String, Container> children = new HashMap();
+            List<ContainerListener> listeners = new CopyOnWriteArrayList();
+            Cluster cluster = null;
+            Realm realm = null;
+            Pipeline pipeline = new StandardPipeline(this);
+        四种容器的实现类：StandardEngine、StandardHost、StandardContext、StandardWrapper
+    Valve：各种阀门
+        一个基本实现：ValveBase
+        四种容器对应的阀门实现类：StandardEngineValve、StandardHostValve、StandardContextValve、StandardWrapperValve
+    Pipeline：管道
+        基本实现：StandardPipeline
+    Connector
+        Service service;
+        ProtocolHandler protocolHandler = Http11NioProtocol;
+        Adapter adapter;
+    Http11NioProtocol
 实现类：
     LifecycleBase
         添加了四个抽象方法initInternal、startInternal、stopInternal、destroyInternal
         添加了新的方法fireLifecycleEvent(触发LifecycleEvent)/setStateInternal(更新组件状态)
     LifecycleMBeanBase extends LifecycleBase
     StandardServer、StandardService等组件继承LifecycleMBeanBase，并重写initInternal、startInternal、stopInternal、destroyInternal方法
+    StandardServer：
+        Service[] services = new Service[0];
+        this.globalNamingResources = new NamingResourcesImpl();
+        this.namingContextListener = new NamingContextListener();
+    StandardService：
+        Connector[] connectors = new Connector[0];
+        Server server = null;
+        Engine engine = null;
+        ArrayList<Executor> executors = new ArrayList();
+        Mapper mapper = new Mapper();
+        MapperListener mapperListener = new MapperListener(this);
+    StandardEngine
+        this.pipeline.setBasic(new StandardEngineValve());
+    StandardHost
+        String[] aliases = new String[0];
+        this.pipeline.setBasic(new StandardHostValve());
+    StandardContext
+    StandardWrapper
 几个动作：
     init：NEW--->INITIALIZING--->INITIALIZED
     start:INITIALIZED--->STARTING_PREP--->STARTING--->STARTED

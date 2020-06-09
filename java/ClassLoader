@@ -1,0 +1,7 @@
+说一说类加载器
+1、首先有几种类加载器呢？
+    启动类加载器（Bootstrap）C++语言实现，虚拟机的一部分，加载<JAVA_HOME>/lib和-Xbootclasspath参数指定的路径下的jar包
+    扩展类加载器（Extension）sun.misc.Launcher$ExtClassLoader类，加载<JAVA_HOME>/lib/ext目录下或者由系统变量-Djava.ext.dir指定位路径中的类库
+    应用类加载器（System）sun.misc.Launcher$AppClassLoader，加载系统类路径java -classpath或-D java.class.path 指定路径下的类库
+2、了解一下双亲委派模式
+    一个类加载器收到类加载请求时，先让他的父类加载器去加载，一直到启动类加载器，如果父类可以加载就返回，反之，才会由子类加载器加载

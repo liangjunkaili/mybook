@@ -1,0 +1,23 @@
+spring的工厂加载机制
+目标位置：META-INF/spring.factories
+两个方法
+    loadFactories(Class<T> factoryType, @Nullable ClassLoader classLoader)
+        指定factoryTypeName获取对应的实现的list<T>
+    loadFactoryNames(Class<?> factoryType, @Nullable ClassLoader classLoader)
+        指定factoryTypeName获取对应的实现的list<String>
+
+
+涉及到的工具类
+    ClassLoader#getResources/ClassLoader#getSystemResources
+        将某个路径转为Enumeration<URL>
+    UrlResource
+        将URL转为UrlResource
+    PropertiesLoaderUtils#loadProperties
+        将UrlResource转为Properties
+    StringUtils#commaDelimitedListToStringArray
+        将某个类型的string转为数组，放到LinkedMultiValueMap（key为factoryTypeName，value为factoryImplementationName）
+    LinkedMultiValueMap：放到ConcurrentReferenceHashMap中（key为classLoader，value为LinkedMultiValueMap）
+    ConcurrentReferenceHashMap
+
+    ClassUtils#forName
+        通过classloader得到指定类型的实现的Class

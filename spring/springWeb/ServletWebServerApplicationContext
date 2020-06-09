@@ -1,0 +1,11 @@
+1、ServletWebServerApplicationContext#createWebServer，创建WebServer
+    ServletWebServerApplicationContext#getWebServerFactory，先得到ServletWebServerFactory--->TomcatServletWebServerFactory（默认）
+    TomcatServletWebServerFactory#getWebServer
+        创建Tomcat
+        创建Connector
+    TomcatWebServer#initialize
+        创建TomcatWebServer，并进行初始化，this.tomcat.start();
+    Tomcat#getServer
+        new StandardServer();new StandardService();
+2、启动WebServer
+3、停止WebServer
