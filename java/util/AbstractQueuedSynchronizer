@@ -1,0 +1,10 @@
+AQS框架
+两种模式：
+    SHARED：共享
+    EXCLUSIVE：独占
+五种waitStatus
+    1：CANCELLED
+    -1：SIGNAL
+    -2：CONDITION
+    -3：PROPAGATE
+    0：None of the above

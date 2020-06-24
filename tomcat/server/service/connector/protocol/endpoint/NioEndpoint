@@ -1,0 +1,53 @@
+AbstractEndpoint
+    四种BindState
+        UNBOUND,
+        BOUND_ON_INIT,
+        BOUND_ON_START,
+        SOCKET_CLOSED_ON_STOP;
+    init()
+        this.bindWithCleanup();---》NioEndpoint#bind
+        this.bindState = AbstractEndpoint.BindState.BOUND_ON_INIT;
+    start()
+        NioEndpoint#startInternal();
+    stop()
+        NioEndpoint#stopInternal();
+        NioEndpoint#unbind()
+    destroy()
+        if (this.bindState == AbstractEndpoint.BindState.BOUND_ON_INIT) {
+            NioEndpoint#unbind();
+            this.bindState = AbstractEndpoint.BindState.UNBOUND;
+        }
+LimitLatch控制maxConnections，默认10000
+Acceptor
+ServerSocketChannel
+
+NioEndpoint
+    bind()
+        this.initServerSocket();打开channel，绑定监听端口
+            this.serverSock = ServerSocketChannel.open();
+            this.socketProperties.setProperties(this.serverSock.socket());
+            InetSocketAddress addr = new InetSocketAddress(this.getAddress(), this.getPortWithOffset());
+            this.serverSock.socket().bind(addr, this.getAcceptCount());
+        this.setStopLatch(new CountDownLatch(1));
+        this.initialiseSsl();
+        this.selectorPool.open(this.getName());
+    startInternal()
+        this.createExecutor();创建线程池
+        this.initializeConnectionLatch();创建连接数控制阀门
+        //创建轮询器，设置并启动
+        this.poller = new NioEndpoint.Poller();
+        Thread pollerThread = new Thread(this.poller, this.getName() + "-ClientPoller");
+        pollerThread.setPriority(this.threadPriority);
+        pollerThread.setDaemon(true);
+        pollerThread.start();
+        //创建接收器，设置并启动
+        AbstractEndpoint#startAcceptorThread();
+    stopInternal()
+        this.poller.destroy();
+        this.shutdownExecutor();
+    unbind()
+        this.doCloseServerSocket();关闭channel
+        this.destroySsl();
+        super.unbind();
+        this.selectorPool.close();
+

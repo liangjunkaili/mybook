@@ -1,0 +1,13 @@
+主要实现都在AbstractProtocol
+    init()
+        this.endpoint.init();
+    start()
+        this.endpoint.start();
+    stop()
+        this.endpoint.stop();
+    destroy()
+        this.endpoint.destroy();
+    pause()
+        this.endpoint.pause();
+    resume()
+        this.endpoint.resume();

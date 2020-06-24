@@ -1,0 +1,13 @@
+内存操作
+
+CAS相关
+    底层实现为CPU指令cmpxchg
+举例理解：AtomicInteger
+    public final boolean compareAndSet(int expect, int update) {
+        return unsafe.compareAndSwapInt(this, valueOffset, expect, update);
+    }
+    this：对象本身
+    valueOffset：value字段的内存地址（偏移量）
+    expect：期望的值
+    update：新值
+    执行原理：将valueOffset的值和expect值做比较，如果匹配，处理器将该valueOffset更新为update值，否则，不做任何操作。

@@ -1,0 +1,10 @@
+实现了Runnable接口，是一个接收器线程
+四种状态：
+    NEW,
+    RUNNING,
+    PAUSED,
+    ENDED;
+主要实现
+    this.endpoint.countUpOrAwaitConnection();获取连接数
+    NioEndpoint#serverSocketAccept();
+        ServerSocketChannel#accept();监听连接
