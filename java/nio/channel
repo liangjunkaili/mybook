@@ -1,0 +1,88 @@
+接口（12个）
+AutoCloseable（1.7）
+    |
+Closeable（1.5）
+    |
+Channel（1.4）
+    |                           |                       |                       |                       |
+AsynchronousChannel（1.7）InterruptibleChannel（1.4） NetworkChannel（1.7）ReadableByteChannel（1.4）WritableByteChannel（1.4）
+    |                                                    |                      |               |       |          |
+AsynchronousByteChannel（1.7）                      MulticastChannel（1.7）      |              ByteChannel（1.4）  |
+                                                                          ScatteringByteChannel（1.4）|      GatheringByteChannel（1.4）
+                                                                                                      |
+                                                                                              SeekableByteChannel（1.7）
+解读一下上面的接口：
+AutoCloseable：
+    close()支持自动关闭资源，需要配合try
+Closeable：
+    close()手动关闭资源
+Channel：
+    isOpen()通道是否打开
+    close()关闭通道
+InterruptibleChannel：（可以异步关闭和中断的通道）
+    close()异步关闭通道
+ReadableByteChannel：
+    read(ByteBuffer dst)从当前通道读取字节数组到给定的buffer
+WritableByteChannel：
+    write(ByteBuffer src)从给定的buffer中写入字节数组到当前通道
+ScatteringByteChannel：从当前通道读取字节数组到给定的buffers（分散到一个或多个）
+    read(ByteBuffer[] dsts, int offset, int length)
+    read(ByteBuffer[] dsts)
+GatheringByteChannel：从给定的buffers（一个或多个汇聚）中写入字节数组到当前通道
+    write(ByteBuffer[] srcs, int offset, int length)
+    write(ByteBuffer[] srcs)
+ByteChannel：一个可读可写的通道，整合了ReadableByteChannel和WritableByteChannel
+AsynchronousChannel：支持异步I / O操作的通道
+AsynchronousByteChannel：
+    <A> void read(ByteBuffer dst,A attachment,CompletionHandler<Integer,? super A> handler);
+    Future<Integer> read(ByteBuffer dst);
+    <A> void write(ByteBuffer src,A attachment,CompletionHandler<Integer,? super A> handler);
+    Future<Integer> write(ByteBuffer src);
+NetworkChannel：网络套接字通道
+    NetworkChannel bind(SocketAddress local)
+    SocketAddress getLocalAddress()
+     <T> NetworkChannel setOption(SocketOption<T> name, T value)
+     <T> T getOption(SocketOption<T> name)
+     Set<SocketOption<?>> supportedOptions();
+MulticastChannel：支持IP多播
+    MembershipKey join(InetAddress group, NetworkInterface interf)
+    MembershipKey join(InetAddress group, NetworkInterface interf, InetAddress source)
+SeekableByteChannel：保持当前位置并允许更改位置的字节通道
+    long position()
+    SeekableByteChannel position(long newPosition)
+    long size()
+    SeekableByteChannel truncate(long size)
+接下来看看一些抽象类
+AbstractInterruptibleChannel implements Channel, InterruptibleChannel
+    可中断通道的基本实现类
+    begin()
+    end()
+AbstractSelectableChannel extends SelectableChannel
+    SelectableChannel的基本实现
+AsynchronousFileChannel implements AsynchronousChannel
+AsynchronousServerSocketChannel implements AsynchronousChannel, NetworkChannel
+AsynchronousSocketChannel implements AsynchronousByteChannel, NetworkChannel
+DatagramChannel extends AbstractSelectableChannel implements ByteChannel, ScatteringByteChannel, GatheringByteChannel, MulticastChannel
+FileChannel extends AbstractInterruptibleChannel implements SeekableByteChannel, GatheringByteChannel, ScatteringByteChannel
+SelectableChannel extends AbstractInterruptibleChannel implements Channel
+    public abstract SelectorProvider provider();返回创建此通道的SelectorProvider
+    public abstract int validOps();返回该通道支持操作的标识
+    public abstract boolean isRegistered();当前通道是否注册
+    public abstract SelectionKey keyFor(Selector sel);返回通道在给定Selector中的注册的SelectionKey
+    public abstract SelectionKey register(Selector sel, int ops, Object att)
+    public final SelectionKey register(Selector sel, int ops)用给定的Selector注册该通道
+    public abstract SelectableChannel configureBlocking(boolean block)设置通道的阻塞模式
+    public abstract boolean isBlocking();查询是否是阻塞模式，默认是阻塞
+    public abstract Object blockingLock();
+ServerSocketChannel extends AbstractSelectableChannel implements NetworkChannel
+SocketChannel extends AbstractSelectableChannel implements ByteChannel, ScatteringByteChannel, GatheringByteChannel, NetworkChannel
+    public static SocketChannel open()
+    public abstract SocketChannel bind(SocketAddress local)
+    public abstract Socket socket();
+
+大致可以这么理解：
+1、关于file的通道
+2、异步的file通道
+3、socket通道
+4、异步的socket通道
+5、Datagram的通道
