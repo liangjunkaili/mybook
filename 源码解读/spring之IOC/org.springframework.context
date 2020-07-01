@@ -1,0 +1,10 @@
+Ô´ÂëÎ»ÖÃ£ºspring-context
+ApplicationContext
+AnnotationConfigApplicationContext
+Environment
+stand-alone applications
+    ClassPathXmlApplicationContext
+    FileSystemXmlApplicationContext
+    XmlBeanDefinitionReader
+    BeanDefinition
+    DefaultListableBeanFactory

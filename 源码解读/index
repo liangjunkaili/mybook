@@ -1,0 +1,16 @@
+spring-core
+spring-aop
+spring-aspects
+spring-beans
+spring-context
+spring-context-support
+spring-expression
+spring-jcl
+spring-jdbc
+spring-orm
+spring-oxm
+spring-test
+spring-tx
+spring-web
+spring-webflux
+spring-webmvc

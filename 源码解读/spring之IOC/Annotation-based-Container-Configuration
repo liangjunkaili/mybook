@@ -1,0 +1,16 @@
+@Required
+@Autowired
+@Primary
+@Qualifier
+CustomAutowireConfigurer
+@Resource
+@Value
+@PostConstruct
+@PreDestroy
+@Component
+@Repository
+@Service
+@Controller
+@ComponentScan
+@Configuration
+@Bean
