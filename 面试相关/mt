@@ -1,0 +1,30 @@
+java的基础知识
+    抽象类和接口
+        1）抽象类可以提供成员方法的实现细节，而接口中只能存在public abstract 方法；
+        2）抽象类中的成员变量可以是各种类型的，而接口中的成员变量只能是public static final类型的；
+        3）接口中不能含有静态代码块以及静态方法，而抽象类可以有静态代码块和静态方法；
+        4）一个类只能继承一个抽象类，而一个类却可以实现多个接口。
+    String、StringBuffer、StringBuilder
+    final、finally、finalize()
+        final修饰类，类不可继承，final类中的成员方法都是final的
+        final修饰方法，方法锁定
+        final修饰变量，如果为基础类型，值不可变，如果是引用类型，不能指向另一个对象
+    return和finally的执行顺序
+        先执行return语句，在执行finally中的，最后返回return的结果
+    volatile
+        保证有序性和可见性，和java内存模型有关
+    synchronized、Lock
+        synchronized修饰代码块或者方法，保证线程安全，会自动释放锁，不会导致死锁
+        lock可以响应中断，但是必须在finally中释放锁
+    static
+JVM相关
+    内存模型、分区
+    内存分配
+    是否可回收的判定方法
+    回收算法
+    垃圾收集器
+    一些工具
+项目介绍
+遇到的棘手问题
+线上服务器的配置
+内存63G
