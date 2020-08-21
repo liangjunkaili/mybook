@@ -1,3 +1,74 @@
 关于maven你有多少故事呢？
     就是添加jar包依赖吗？
 问题总结：
+
+查看 Super POM 默认配置:mvn help:effective-pom
+maven的基本配置
+1、在settings文件中配置本地仓库，默认值是${user.home}/.m2/repository
+    <localRepository>绝对路径</localRepository>
+2、快速生成一个maven项目
+    mvn archetype:generate -DgroupId=com.mycompany.app -DartifactId=my-app -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.4 -DinteractiveMode=false
+3、settings文件的读取顺序
+    global settings：maven.home下conf\settings.xml
+    user settings：${user.home}/.m2/settings.xml
+    如果两个都存在，进行合并，user级别的为主
+4、settings文件
+    <settings   xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                                    https://maven.apache.org/xsd/settings-1.0.0.xsd">
+      <localRepository/>设置本地仓库
+      <interactiveMode/>默认true，交互的与用户获取输入
+      <offline/>默认false，是否脱机工作
+      <pluginGroups/>
+      <servers/>
+      <mirrors/>
+      <proxies/>
+      <profiles/>
+      <activeProfiles/>
+    </settings>
+5、pom文件
+    <project xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                            http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+        <modelVersion>4.0.0</modelVersion>
+
+        <!-- The Basics -->
+        <groupId>...</groupId>
+        <artifactId>...</artifactId>
+        <version>...</version>
+        <packaging>...</packaging>
+        <dependencies>...</dependencies>
+        <parent>...</parent>
+        <dependencyManagement>...</dependencyManagement>
+        <modules>...</modules>
+        <properties>...</properties>
+
+        <!-- Build Settings -->
+        <build>...</build>
+        <reporting>...</reporting>
+
+        <!-- More Project Information -->
+        <name>...</name>
+        <description>...</description>
+        <url>...</url>
+        <inceptionYear>...</inceptionYear>
+        <licenses>...</licenses>
+        <organization>...</organization>
+        <developers>...</developers>
+        <contributors>...</contributors>
+
+        <!-- Environment Settings -->
+        <issueManagement>...</issueManagement>
+        <ciManagement>...</ciManagement>
+        <mailingLists>...</mailingLists>
+        <scm>...</scm>
+        <prerequisites>...</prerequisites>
+        <repositories>...</repositories>
+        <pluginRepositories>...</pluginRepositories>
+        <distributionManagement>...</distributionManagement>
+        <profiles>...</profiles>
+    </project>
+6、mvn compile -e -X -U
