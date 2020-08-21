@@ -72,3 +72,4 @@ maven的基本配置
         <profiles>...</profiles>
     </project>
 6、mvn compile -e -X -U
+7、如果遇到拉取不下jar到本地仓库的情况，使用-U也没用的话，可以换取一个本地仓库的地址
