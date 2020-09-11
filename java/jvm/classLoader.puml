@@ -1,0 +1,8 @@
+@startmindmap
+* 类加载器
+** 启动类加载器（JAVA_HOME\lib或-Xbootclasspath）
+** 其他的类加载器
+*** 扩展类加载器（JAVA_HOME\lib\ext或java.ext.dirs）
+*** 应用程序类加载器（用户类路径classpath）
+*** 自定义类加载器
+@endmindmap

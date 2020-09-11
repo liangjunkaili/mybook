@@ -1,0 +1,8 @@
+@startmindmap
+* 类的初始化
+** 遇到new、getstatic、putstatic、invokestatic这些字节码指令
+** 使用java.lang.reflect包的方法对类进行反射调用
+** 初始化一个类时，先触发父类的初始化
+** 虚拟机启动时，会初始化主类
+** JDK1.7的动态语言支持
+@endmindmap
