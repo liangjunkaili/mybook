@@ -1,0 +1,9 @@
+@startmindmap
+* 内存中的java对象
+** 对象头
+*** Mark Word
+*** 类型指针
+*** 数组长度（只有数组对象才有）
+** 实例数据
+** 对齐填充
+@endmindmap
