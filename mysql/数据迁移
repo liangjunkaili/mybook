@@ -1,0 +1,6 @@
+1、导出数据
+    mysqldump -hgamedb.txwxtest3.TXWX.db -P10005 -uywtest -pywtest2018 --databases ywwithdraw --single-transaction >bak.sql
+    mysqldump -hlocalhost -P3306 -uliangwei -pliangwei123... --databases pay --skip-lock-all-tables >bak.sql
+2、导入数据库
+    1）create database pay;
+    2）mysql -uliangwei -p pay < bak.sql

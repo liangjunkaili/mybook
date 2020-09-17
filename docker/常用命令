@@ -1,0 +1,2 @@
+进入容器：docker exec -it 775c7c9ee1e1 /bin/bash
+从容器中下载文件：docker cp 容器id:/root/test.txt /root/

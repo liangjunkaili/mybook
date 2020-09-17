@@ -891,7 +891,7 @@ EOF
 	echo ${UNAME_MACHINE}-unknown-linux-${LIBC}
 	exit ;;
     alpha:Linux:*:*)
-	case `sed -n '/^cpu model/s/^.*: \(.*\)/\1/p' < /proc/cpuinfo` in
+	case `sed -n '/^2、cpu model/s/^.*: \(.*\)/\1/p' < /proc/cpuinfo` in
 	  EV5)   UNAME_MACHINE=alphaev5 ;;
 	  EV56)  UNAME_MACHINE=alphaev56 ;;
 	  PCA56) UNAME_MACHINE=alphapca56 ;;
@@ -983,7 +983,7 @@ EOF
 	exit ;;
     parisc:Linux:*:* | hppa:Linux:*:*)
 	# Look for CPU level
-	case `grep '^cpu[^a-z]*:' /proc/cpuinfo 2>/dev/null | cut -d' ' -f2` in
+	case `grep '^2、cpu[^a-z]*:' /proc/cpuinfo 2>/dev/null | cut -d' ' -f2` in
 	  PA7*) echo hppa1.1-unknown-linux-${LIBC} ;;
 	  PA8*) echo hppa2.0-unknown-linux-${LIBC} ;;
 	  *)    echo hppa-unknown-linux-${LIBC} ;;
