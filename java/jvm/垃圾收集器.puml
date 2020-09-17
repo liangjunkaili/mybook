@@ -1,0 +1,19 @@
+@startmindmap
+* 垃圾收集器
+** -XX:+UseSerialGC
+*** Serial Old收集器
+*** Serial收集器
+** -XX:+UseParNewGC
+*** ParNew收集器
+*** Serial Old收集器
+** -XX:+UseParallelGC
+*** Parallel Scavenge收集器
+*** Serial Old收集器
+** -XX:+UseParalleOldlGC
+*** Parallel Scavenge收集器
+*** Parallel Old收集器
+** -XX:+UseConcMarkSweepGC
+*** CMS收集器
+** -XX:+UseG1GC
+*** G1收集器
+@endmindmap

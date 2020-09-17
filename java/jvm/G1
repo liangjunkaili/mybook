@@ -1,0 +1,80 @@
+root@iz2zeahl7c90x201689zv5z:[/root]jmap -heap 6019
+Attaching to process ID 6019, please wait...
+Debugger attached successfully.
+Server compiler detected.
+JVM version is 25.241-b07
+
+using thread-local object allocation.
+Garbage-First (G1) GC with 1 thread(s)
+
+Heap Configuration:
+   MinHeapFreeRatio         = 40
+   MaxHeapFreeRatio         = 70
+   MaxHeapSize              = 536870912 (512.0MB)
+   NewSize                  = 234881024 (224.0MB)
+   MaxNewSize               = 234881024 (224.0MB)
+   OldSize                  = 5452592 (5.1999969482421875MB)
+   NewRatio                 = 2
+   SurvivorRatio            = 8
+   MetaspaceSize            = 134217728 (128.0MB)
+   CompressedClassSpaceSize = 125829120 (120.0MB)
+   MaxMetaspaceSize         = 134217728 (128.0MB)
+   G1HeapRegionSize         = 1048576 (1.0MB)
+
+Heap Usage:
+G1 Heap:
+   regions  = 512
+   capacity = 536870912 (512.0MB)
+   used     = 75440648 (71.94580841064453MB)
+   free     = 461430264 (440.05419158935547MB)
+   14.05191570520401% used
+G1 Young Generation:
+Eden Space:
+   regions  = 48
+   capacity = 241172480 (230.0MB)
+   used     = 50331648 (48.0MB)
+   free     = 190840832 (182.0MB)
+   20.869565217391305% used
+Survivor Space:
+   regions  = 6
+   capacity = 6291456 (6.0MB)
+   used     = 6291456 (6.0MB)
+   free     = 0 (0.0MB)
+   100.0% used
+G1 Old Generation:
+   regions  = 19
+   capacity = 289406976 (276.0MB)
+   used     = 18817544 (17.94580841064453MB)
+   free     = 270589432 (258.05419158935547MB)
+   6.502104496610338% used
+
+19761 interned Strings occupying 2092272 bytes.
+
+
+2020-09-17T18:18:40.770+0800: 257.556: [GC pause (G1 Evacuation Pause) (young), 0.0242249 secs]
+   [Parallel Time: 22.9 ms, GC Workers: 1]
+      [GC Worker Start (ms):  257556.0]
+      [Ext Root Scanning (ms):  3.7]
+      [Update RS (ms):  8.3]
+         [Processed Buffers:  15]
+      [Scan RS (ms):  0.1]
+      [Code Root Scanning (ms):  0.3]
+      [Object Copy (ms):  10.4]
+      [Termination (ms):  0.0]
+         [Termination Attempts:  1]
+      [GC Worker Other (ms):  0.0]
+      [GC Worker Total (ms):  22.9]
+      [GC Worker End (ms):  257578.9]
+   [Code Root Fixup: 0.0 ms]
+   [Code Root Purge: 0.0 ms]
+   [Clear CT: 0.1 ms]
+   [Other: 1.2 ms]
+      [Choose CSet: 0.0 ms]
+      [Ref Proc: 0.9 ms]
+      [Ref Enq: 0.0 ms]
+      [Redirty Cards: 0.0 ms]
+      [Humongous Register: 0.0 ms]
+      [Humongous Reclaim: 0.0 ms]
+      [Free CSet: 0.1 ms]
+   [Eden: 217.0M(217.0M)->0.0B(218.0M) Survivors: 7168.0K->6144.0K Heap: 240.2M(512.0M)->23.9M(512.0M)]
+ [Times: user=0.02 sys=0.00, real=0.03 secs]
