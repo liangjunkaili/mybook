@@ -1,0 +1,21 @@
+1、类的修饰符
+    public
+2、变量的修饰符
+3、方法的修饰符
+4、关键字
+5、类型
+6、接口
+    变量：public static final
+    方法：public abstract、public static、public default
+    可以多继承
+7、继承
+    父类中声明为 public 的方法在子类中也必须为 public
+    父类中声明为 protected 的方法在子类中要么声明为 protected，要么声明为 public，不能声明为 private
+    父类中声明为 private 的方法，不能够被继承
+    子类拥有父类非 private 的属性、方法。
+
+8、抽象类
+    不能实例化对象
+    抽象类中可以没有抽象方法，但是抽象方法必须在抽象类中
+9、重写
+     返回值和形参都不能改变

@@ -1,0 +1,7 @@
+@startmindmap
+* interface
+** 变量（public static final）
+** 静态方法
+** 抽象方法（子类必须实现）
+** default 方法（子类可以直接调用，也可以自己重写）
+@endmindmap
