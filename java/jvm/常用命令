@@ -1,2 +1,6 @@
 1、查看某个进程使用的垃圾回收器
     jmap -heap pid
+2、反解析工具，将 .class 字节码文件解析成可读的文件格式
+    javap -p -v .class
+3、强制生成 LineNumberTable 和 LocalVariableTable
+    javac?-g:lines?-g:vars .java
