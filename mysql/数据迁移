@@ -1,6 +1,10 @@
 1、导出数据
     mysqldump -hgamedb.txwxtest3.TXWX.db -P10005 -uywtest -pywtest2018 --databases ywwithdraw --single-transaction >bak.sql
     mysqldump -hlocalhost -P3306 -uliangwei -pliangwei123... --databases pay --skip-lock-all-tables >bak.sql
+    mysqldump -hgamedb.qqbookevent.TXWX.db -P10023 -uqqwithdraw -pQQwithDraw#0728 --databases yw_withdraw --tables withdraw_deposit_record --where='start_date<=2020-09-01' --single-transaction >demo.sql
+    mysqldump -hgamedb.txwxtest3.TXWX.db -P10005 --single-transaction --skip-opt --create-options --default-character-set=utf8 -uywtest -pywtest2018 --databases ywwithdraw --tables withdraw_deposit_record --where="start_date='2020-09-01'"  >demo.sql;
 2、导入数据库
     1）create database pay;
     2）mysql -uliangwei -p pay < bak.sql
+    mysql -hspider.netmoneywithdraw.TXWX.db -P25003 --default-character-set=utf8  -unmwithdraw -pNMwithDraw#0923 yw_withdraw <yw_withdraw_user.sql;
+    nohup mysql -hspider.netmoneywithdraw.TXWX.db -P25003 --default-character-set=utf8  -unmwithdraw -pNMwithDraw#0923 yw_withdraw <yw_withdraw_deposit_record.sql &
