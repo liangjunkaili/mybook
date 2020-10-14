@@ -1,1 +1,42 @@
-1、spring中的循环依赖问题
+1、spring中是如何解决循环依赖问题的？
+    这里注意构造器注入的循环依赖问题是没有解决的。
+    setter方法注入
+    字段注入
+2、spring中单例bean的创建
+    需要bean的beanName、RootBeanDefinition、args
+    createBean
+        //解析到Class
+        resolveBeanClass
+        //给BeanPostProcessors一个返回代理而不是目标bean实例的机会，返回一个代理的对象
+        resolveBeforeInstantiation
+        //实际创建bean
+        doCreateBean
+            bean的包装类：BeanWrapper
+            createBeanInstance
+                默认的构造函数
+                实例创建的回调
+                工厂方法
+                显示的构造函数
+            //未完成的FactoryBean实例的缓存:到BeanWrapper的FactoryBean名称
+            private final ConcurrentMap<String, BeanWrapper> factoryBeanInstanceCache = new ConcurrentHashMap<>();
+            //允许后处理程序修改合并后的bean定义
+            applyMergedBeanDefinitionPostProcessors
+            //添加给定的单例对象工厂来构建指定的单例对象
+            addSingletonFactory
+            //保存正在创建中的bean的名称
+            private final Set<String> singletonsCurrentlyInCreation = Collections.newSetFromMap(new ConcurrentHashMap<>(16));
+            获取对指定bean的早期访问的引用
+            //单例对象的缓存:从bean名称到bean实例---一级缓存
+            private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>(256);
+            //早期单例对象的缓存:从bean名称到bean实例---二级缓存
+            private final Map<String, Object> earlySingletonObjects = new ConcurrentHashMap<>(16);
+            //单例工厂的缓存:从bean名到ObjectFactory---三级缓存
+            private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<>(16);
+            //一组已注册的单例对象，按注册顺序包含bean名称
+            private final Set<String> registeredSingletons = new LinkedHashSet<>(256);
+        //属性填充
+        populateBean
+        //初始化bean
+        initializeBean
+        //返回单例对象
+        getSingleton
