@@ -1,0 +1,12 @@
+@startuml
+client -> nginx: 请求到达nginx层
+nginx -> server: 由nginx路由分发到具体的server节点
+server -> underTow_Thread:web容器分配线程处理请求
+underTow_Thread -> Child_Thread: 调用线程池去处理子任务
+Child_Thread -> Other_Child_Thread: 子任务中又会有子任务
+Other_Child_Thread --> Child_Thread:子任务完成后返回
+Child_Thread --> underTow_Thread:所有的子任务完成返回，主线程返回。
+underTow_Thread --> server:请求处理完成
+server --> nginx:返回结果给nginx
+nginx --> client:返回response给client，请求结束。
+@enduml
