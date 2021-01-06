@@ -1,0 +1,4 @@
+@startuml
+.java -> .class: javac(parse-->enter-->process-->attr-->flow-->desugar-->generate)
+
+@enduml
