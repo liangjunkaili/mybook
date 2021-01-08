@@ -41,6 +41,7 @@
 
 const char *SDS_NOINIT = "SDS_NOINIT";
 
+//计算给定字符串类型的结构体大小
 static inline int sdsHdrSize(char type) {
     switch(type&SDS_TYPE_MASK) {
         case SDS_TYPE_5:
@@ -56,7 +57,7 @@ static inline int sdsHdrSize(char type) {
     }
     return 0;
 }
-
+//根据字符串的长度推断出对应的类型
 static inline char sdsReqType(size_t string_size) {
     if (string_size < 1<<5)
         return SDS_TYPE_5;
@@ -86,6 +87,7 @@ static inline char sdsReqType(size_t string_size) {
  * You can print the string with printf() as there is an implicit \0 at the
  * end of the string. However the string is binary safe and can contain
  * \0 characters in the middle, as the length is stored in the sds header. */
+//新建一个字符串
 sds sdsnewlen(const void *init, size_t initlen) {
     void *sh;
     sds s;
@@ -101,9 +103,10 @@ sds sdsnewlen(const void *init, size_t initlen) {
     if (init==SDS_NOINIT)
         init = NULL;
     else if (!init)
-        memset(sh, 0, hdrlen+initlen+1);
+        memset(sh, 0, hdrlen+initlen+1);//复制字符 0（一个无符号字符）到参数 sh 所指向的字符串的前 hdrlen+initlen+1 个字符。
     s = (char*)sh+hdrlen;
     fp = ((unsigned char*)s)-1;
+    //初始化操作
     switch(type) {
         case SDS_TYPE_5: {
             *fp = type | (initlen << SDS_TYPE_BITS);
@@ -139,7 +142,7 @@ sds sdsnewlen(const void *init, size_t initlen) {
         }
     }
     if (initlen && init)
-        memcpy(s, init, initlen);
+        memcpy(s, init, initlen);//从 init 复制 initlen 个字符到 s
     s[initlen] = '\0';
     return s;
 }
@@ -152,7 +155,7 @@ sds sdsempty(void) {
 
 /* Create a new sds string starting from a null terminated C string. */
 sds sdsnew(const char *init) {
-    size_t initlen = (init == NULL) ? 0 : strlen(init);
+    size_t initlen = (init == NULL) ? 0 : strlen(init);//计算字符串 init 的长度，直到空结束字符，但不包括空结束字符。
     return sdsnewlen(init, initlen);
 }
 
@@ -296,6 +299,7 @@ sds sdsRemoveFreeSpace(sds s) {
  * 3) The free buffer at the end if any.
  * 4) The implicit null term.
  */
+//字符串整体的大小
 size_t sdsAllocSize(sds s) {
     size_t alloc = sdsalloc(s);
     return sdsHdrSize(s[-1])+alloc+1;
@@ -303,6 +307,7 @@ size_t sdsAllocSize(sds s) {
 
 /* Return the pointer of the actual SDS allocation (normally SDS strings
  * are referenced by the start of the string buffer). */
+//返回SDS分配的指针
 void *sdsAllocPtr(sds s) {
     return (void*) (s-sdsHdrSize(s[-1]));
 }
