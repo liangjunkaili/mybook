@@ -86,7 +86,7 @@ uint8_t *dictGetHashFunctionSeed(void) {
 
 uint64_t siphash(const uint8_t *in, const size_t inlen, const uint8_t *k);
 uint64_t siphash_nocase(const uint8_t *in, const size_t inlen, const uint8_t *k);
-
+//将任意输入的键转换成整形数据，使其可以当做数组的下标
 uint64_t dictGenHashFunction(const void *key, int len) {
     return siphash(key,len,dict_hash_function_seed);
 }
@@ -108,6 +108,7 @@ static void _dictReset(dictht *ht)
 }
 
 /* Create a new hash table */
+//分配内存，并进行初始化
 dict *dictCreate(dictType *type,
         void *privDataPtr)
 {
@@ -135,7 +136,7 @@ int _dictInit(dict *d, dictType *type,
 int dictResize(dict *d)
 {
     unsigned long minimal;
-
+    //如果设置不能resize或在rehash中，返回错误
     if (!dict_can_resize || dictIsRehashing(d)) return DICT_ERR;
     minimal = d->ht[0].used;
     if (minimal < DICT_HT_INITIAL_SIZE)

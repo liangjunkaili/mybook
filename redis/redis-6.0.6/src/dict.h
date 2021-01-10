@@ -43,7 +43,7 @@
 
 /* Unused arguments generate annoying warnings... */
 #define DICT_NOTUSED(V) ((void) V)
-
+//hash表节点
 typedef struct dictEntry {
     void *key;
     union {
@@ -52,9 +52,9 @@ typedef struct dictEntry {
         int64_t s64;
         double d;
     } v;
-    struct dictEntry *next;
+    struct dictEntry *next;//hash一样时会用链表，指向下一个节点
 } dictEntry;
-
+//为了实现各种形态的字典而抽象出来的一组操作函数
 typedef struct dictType {
     uint64_t (*hashFunction)(const void *key);
     void *(*keyDup)(void *privdata, const void *key);
@@ -66,16 +66,17 @@ typedef struct dictType {
 
 /* This is our hash table structure. Every dictionary has two of this as we
  * implement incremental rehashing, for the old to the new table. */
+//hash表结构
 typedef struct dictht {
-    dictEntry **table;
-    unsigned long size;
-    unsigned long sizemask;
-    unsigned long used;
+    dictEntry **table;//存储键值对
+    unsigned long size;//总容量，默认是4
+    unsigned long sizemask;//size-1，计算机位运算比取余运算快，通过这个可以快速的计算索引值
+    unsigned long used;//已经存入的数据量
 } dictht;
-
+//字典结构体
 typedef struct dict {
     dictType *type;
-    void *privdata;
+    void *privdata;//私有数据，配合type字段指向的函数一起使用
     dictht ht[2];
     long rehashidx; /* rehashing not in progress if rehashidx == -1 */
     unsigned long iterators; /* number of iterators currently running */
@@ -145,6 +146,7 @@ typedef void (dictScanBucketFunction)(void *privdata, dictEntry **bucketref);
 #define dictGetDoubleVal(he) ((he)->v.d)
 #define dictSlots(d) ((d)->ht[0].size+(d)->ht[1].size)
 #define dictSize(d) ((d)->ht[0].used+(d)->ht[1].used)
+//返回true表示该字典是在rehash中
 #define dictIsRehashing(d) ((d)->rehashidx != -1)
 
 /* API */

@@ -1,0 +1,10 @@
+1、元信息的配置
+    XML文件的配置
+    properties文件的配置
+    注解：AnnotatedGenericBeanDefinition
+    javaAPI
+2、元信息的解析
+3、BeanDefinition的合并
+4、实例化
+5、初始化
+6、销毁
