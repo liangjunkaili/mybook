@@ -88,11 +88,11 @@ typedef struct dict {
  * should be called while iterating. */
 typedef struct dictIterator {
     dict *d;
-    long index;
-    int table, safe;
-    dictEntry *entry, *nextEntry;
+    long index;//当前读取到Hash表中的哪个索引值
+    int table, safe;//table正在迭代的Hash表，safe表示当前创建的迭代器是否为安全模式
+    dictEntry *entry, *nextEntry;//entry表示正在读取的节点，nextEntry表示下一个节点
     /* unsafe iterator fingerprint for misuse detection. */
-    long long fingerprint;
+    long long fingerprint;//字典的状态（指纹）
 } dictIterator;
 
 typedef void (dictScanFunction)(void *privdata, const dictEntry *de);
