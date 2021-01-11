@@ -1434,15 +1434,18 @@ static int parseOptions(int argc, char **argv) {
 
     for (i = 1; i < argc; i++) {
         int lastarg = i==argc-1;
-
+        //参数为-h，并且后面还有参数，就释放原来的hostip内存，就用-h后面的参数重新创建一个hostip
         if (!strcmp(argv[i],"-h") && !lastarg) {
             sdsfree(config.hostip);
             config.hostip = sdsnew(argv[++i]);
         } else if (!strcmp(argv[i],"-h") && lastarg) {
+            //-h后面没有参数，输出用法说明
             usage();
         } else if (!strcmp(argv[i],"--help")) {
+            //如果用户输出--help，输出用法说明
             usage();
         } else if (!strcmp(argv[i],"-x")) {
+            //代表从标准输入读取数据作为该命令的最后一个参数。
             config.stdinarg = 1;
         } else if (!strcmp(argv[i],"-p") && !lastarg) {
             config.hostport = atoi(argv[++i]);
