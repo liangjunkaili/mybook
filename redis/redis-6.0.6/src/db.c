@@ -1199,10 +1199,12 @@ void setExpire(client *c, redisDb *db, robj *key, long long when) {
 
 /* Return the expire time of the specified key, or -1 if no expire
  * is associated with this key (i.e. the key is non volatile) */
+//返回过期时间
 long long getExpire(redisDb *db, robj *key) {
     dictEntry *de;
 
     /* No expire? return ASAP */
+    //判断过期的dict是否为空或有没有这个*key，满足其中一个则返回-1
     if (dictSize(db->expires) == 0 ||
        (de = dictFind(db->expires,key->ptr)) == NULL) return -1;
 
@@ -1240,10 +1242,11 @@ void propagateExpire(redisDb *db, robj *key, int lazy) {
 int keyIsExpired(redisDb *db, robj *key) {
     mstime_t when = getExpire(db,key);
     mstime_t now;
-
+    //-1表示没有过期时间
     if (when < 0) return 0; /* No expire for this key */
 
     /* Don't expire anything while loading. It will be done later. */
+    //正在从磁盘加载数据，返回
     if (server.loading) return 0;
 
     /* If we are in the context of a Lua script, we pretend that time is

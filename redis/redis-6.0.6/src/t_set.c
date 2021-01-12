@@ -1104,11 +1104,11 @@ void sdiffCommand(client *c) {
 void sdiffstoreCommand(client *c) {
     sunionDiffGenericCommand(c,c->argv+2,c->argc-2,c->argv[1],SET_OP_DIFF);
 }
-
+//sscan key cursor [MATCH pattern] [COUNT count]
 void sscanCommand(client *c) {
     robj *set;
     unsigned long cursor;
-
+    //解析传入的cursor是否正常，不正常返回
     if (parseScanCursorOrReply(c,c->argv[2],&cursor) == C_ERR) return;
     if ((set = lookupKeyReadOrReply(c,c->argv[1],shared.emptyscan)) == NULL ||
         checkType(c,set,OBJ_SET)) return;
