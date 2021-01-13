@@ -1,14 +1,32 @@
 @startmindmap
-* Debian
-** Ubuntu
-*** Linux Mint
-*** Kubuntu
-*** Lubuntu
-*** KDE Neon
-** LMDE
-** SolydXK
-** SteamOS
-** Raspbian with a very long name
-*** <s>Raspmbc</s> => OSMC
-*** <s>Raspyfi</s> => Volumio
+* Redis
+** 数据类型
+*** String
+**** set、setbit、setex、setnx、setrange、mset、msetnx、psetex
+*** List
+*** Hash
+*** Set
+*** Zset
+*** Stream
+** 数据结构
+*** SDS
+*** dict
+*** intset
+*** quicklist
+*** ziplist
+*** adlist
+** 对象编码
+*** raw
+*** int
+*** ht
+*** zipmap
+*** linkedlist（新版不再使用）
+*** ziplist
+*** intset
+*** skiplist
+*** embstr
+*** quicklist
+*** stream
+** 访问模块
+*** 网络访问框架
 @endmindmap
