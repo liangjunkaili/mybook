@@ -345,7 +345,7 @@ void freeModuleObject(robj *o) {
 void freeStreamObject(robj *o) {
     freeStream(o->ptr);
 }
-
+//增加引用计数
 void incrRefCount(robj *o) {
     if (o->refcount < OBJ_FIRST_SPECIAL_REFCOUNT) {
         o->refcount++;
@@ -436,6 +436,7 @@ void trimStringObjectIfNeeded(robj *o) {
 }
 
 /* Try to encode a string object in order to save space */
+//优化一个字符型的存储
 robj *tryObjectEncoding(robj *o) {
     long value;
     sds s = o->ptr;
@@ -450,22 +451,26 @@ robj *tryObjectEncoding(robj *o) {
     /* We try some specialized encoding only for objects that are
      * RAW or EMBSTR encoded, in other words objects that are still
      * in represented by an actually array of chars. */
+    //编码不是raw或embstr直接返回
     if (!sdsEncodedObject(o)) return o;
 
     /* It's not safe to encode shared objects: shared objects can be shared
      * everywhere in the "object space" of Redis and may end in places where
      * they are not handled. We handle them only as values in the keyspace. */
+    //如果该robj是共享对象，直接返回
      if (o->refcount > 1) return o;
 
     /* Check if we can represent this string as a long integer.
      * Note that we are sure that a string larger than 20 chars is not
      * representable as a 32 nor 64 bit integer. */
     len = sdslen(s);
+    //计算字符串的长度，小于等于20并且可以转化为long
     if (len <= 20 && string2l(s,len,&value)) {
         /* This object is encodable as a long. Try to use a shared object.
          * Note that we avoid using shared integers when maxmemory is used
          * because every object needs to have a private LRU field for the LRU
          * algorithm to work well. */
+        //服务器的最大内存为0或者内存的淘汰策略不是LFU和LRU并且value在0-10000之间，采用共享池
         if ((server.maxmemory == 0 ||
             !(server.maxmemory_policy & MAXMEMORY_FLAG_NO_SHARED_INTEGERS)) &&
             value >= 0 &&
@@ -475,6 +480,7 @@ robj *tryObjectEncoding(robj *o) {
             incrRefCount(shared.integers[value]);
             return shared.integers[value];
         } else {
+            //否则，编码为raw，释放原来的存储，变为int编码，直接指向value的地址
             if (o->encoding == OBJ_ENCODING_RAW) {
                 sdsfree(o->ptr);
                 o->encoding = OBJ_ENCODING_INT;
@@ -679,7 +685,7 @@ int getLongDoubleFromObjectOrReply(client *c, robj *o, long double *target, cons
     *target = value;
     return C_OK;
 }
-
+//从一个robj得到一个long long的数值
 int getLongLongFromObject(robj *o, long long *target) {
     long long value;
 
@@ -687,9 +693,11 @@ int getLongLongFromObject(robj *o, long long *target) {
         value = 0;
     } else {
         serverAssertWithInfo(NULL,o,o->type == OBJ_STRING);
+        //如果expire的编码是raw或embstr
         if (sdsEncodedObject(o)) {
+            //将一个字符串解析为long long，成功返回1，并将值赋予value
             if (string2ll(o->ptr,sdslen(o->ptr),&value) == 0) return C_ERR;
-        } else if (o->encoding == OBJ_ENCODING_INT) {
+        } else if (o->encoding == OBJ_ENCODING_INT) {//如果expire的编码为int
             value = (long)o->ptr;
         } else {
             serverPanic("Unknown string encoding");
@@ -698,7 +706,7 @@ int getLongLongFromObject(robj *o, long long *target) {
     if (target) *target = value;
     return C_OK;
 }
-
+//从robj得到一个long long的数值或者直接回复请求
 int getLongLongFromObjectOrReply(client *c, robj *o, long long *target, const char *msg) {
     long long value;
     if (getLongLongFromObject(o, &value) != C_OK) {
