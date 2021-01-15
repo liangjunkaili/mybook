@@ -2,12 +2,15 @@
 * Redis
 ** 数据类型
 *** String
-**** set、setbit、setex、setnx、setrange、mset、msetnx、psetex
 *** List
 *** Hash
 *** Set
 *** Zset
 *** Stream
+*** Bitmap
+*** HyperLogLog
+*** GEO
+*** 自定义数据类型
 ** 数据结构
 *** SDS
 *** dict
@@ -29,4 +32,13 @@
 *** stream
 ** 访问模块
 *** 网络访问框架
+** 缓存
+*** 缓存穿透
+** 持久化
+*** AOF
+*** RDB
+** 主从库模式（只能在主库写）
+** 哨兵机制（自动切换主库）
+** 哨兵集群（避免单个哨兵故障以及减少误判率）
+** 切片集群(保存大量数据)
 @endmindmap
