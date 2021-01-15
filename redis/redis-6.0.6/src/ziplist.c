@@ -268,7 +268,12 @@
 /* We use this function to receive information about a ziplist entry.
  * Note that this is not how the data is actually encoded, is just what we
  * get filled by a function in order to operate more easily. */
+/**previous_entry_length：前一个元素的字节长度（1字节：一个元素的长度小于254字节或5字节：一个元素的长度大于等于254字节，第一个字节固定为0xFE，后4个字节表示真正的长度）
+ * encoding：表示当前元素的编码，即content字段存储的数据类型（整数或字节数组），长度可变（1字节或2字节或5字节）
+ * content：存储数据内容（当encoding标识当前元素存储的是0~12的整数，没有content字段，直接存储在encoding的最后4位）
+ * **/
 typedef struct zlentry {
+    //
     unsigned int prevrawlensize; /* Bytes used to encode the previous entry len*/
     unsigned int prevrawlen;     /* Previous entry len. */
     unsigned int lensize;        /* Bytes used to encode this entry type/len.
@@ -740,6 +745,7 @@ unsigned char *__ziplistDelete(unsigned char *zl, unsigned char *p, unsigned int
 }
 
 /* Insert item at "p". */
+//zl压缩列表首地址，p指向元素插入位置，s表示数据内容，slen表示数据长度，返回压缩列表首地址
 unsigned char *__ziplistInsert(unsigned char *zl, unsigned char *p, unsigned char *s, unsigned int slen) {
     size_t curlen = intrev32ifbe(ZIPLIST_BYTES(zl)), reqlen;
     unsigned int prevlensize, prevlen = 0;
