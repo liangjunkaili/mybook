@@ -1,0 +1,42 @@
+1、引入pom
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+2、配置properties
+    spring.security.user.name=liangjun
+    spring.security.user.password=liangjun
+3、核心类介绍
+    SecurityContextHolder
+    SecurityContextHolderStrategy
+    SecurityContext
+    Authentication
+        AbstractAuthenticationToken
+            UsernamePasswordAuthenticationToken
+    GrantedAuthority
+    UserDetails
+    AuthenticatedPrincipal
+    Principal
+    FilterChainProxy
+    SecurityFilterChain
+    FilterInvocation
+    AuthenticationEntryPoint
+
+4、用户名/密码身份认证
+    三种方式：form login、
+
+5、通过自动配置spring.factories文件加载下面的类
+    SecurityAutoConfiguration
+        DefaultAuthenticationEventPublisher
+        SpringBootWebSecurityConfiguration
+        WebSecurityEnablerConfiguration
+        SecurityDataConfiguration
+        DefaultAuthenticationEventPublisher
+    UserDetailsServiceAutoConfiguration
+        AuthenticationManager
+        ObjectPostProcessor
+        AuthenticationProvider
+        UserDetailsService
+    SecurityFilterAutoConfiguration
+        AbstractSecurityWebApplicationInitializer
+        SessionCreationPolicy
